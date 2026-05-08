@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: interviewiq-backend-navya29
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: AI_PROVIDER
+        value: groq
+      - key: AI_MODEL
+        value: llama-3.1-8b-instant
+      - key: GROQ_API_KEY
+        sync: false
+      - key: N8N_REPORT_WEBHOOK_URL
+        sync: false

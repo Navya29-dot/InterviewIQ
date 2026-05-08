@@ -1,0 +1,3578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InterviewIQ - AI Mock Interview Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+<div id="screen-landing" class="screen active">
+  <div class="grid-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="landing-content">
+    <div class="landing-topbar">
+      <div class="auth-user-chip" id="auth-user-chip">Guest mode</div>
+      <div class="landing-top-actions">
+        <button class="btn-secondary" id="admin-entry-btn" onclick="showScreen('admin')" style="display:none;">Admin Dashboard</button>
+        <button class="btn-secondary" id="auth-entry-btn" onclick="showScreen('auth')">Sign In</button>
+        <button class="btn-secondary" id="logout-btn" onclick="logoutUser()" style="display:none;">Logout</button>
+      </div>
+    </div>
+
+    <div class="landing-brand" aria-label="InterviewIQ brand">
+      <div class="brand-shine"></div>
+      <div class="brand-chip">AI Interview Lab</div>
+      <div class="brand-word">InterviewIQ</div>
+      <div class="brand-metrics">
+        <div class="brand-metric">
+          <span class="brand-metric-num">Real-Time</span>
+          <span class="brand-metric-label">voice + video</span>
+        </div>
+        <div class="brand-metric">
+          <span class="brand-metric-num">Adaptive</span>
+          <span class="brand-metric-label">question flow</span>
+        </div>
+        <div class="brand-metric">
+          <span class="brand-metric-num">Focused</span>
+          <span class="brand-metric-label">coding rounds</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="badge">
+      <div class="badge-dot"></div>
+      AI-Powered Interview Training
+    </div>
+
+    <h1 class="hero">
+      <span class="hero-line">Ace Every Interview</span><br>
+      <span class="hero-grad">with AI Coaching</span>
+    </h1>
+
+    <p class="hero-sub">
+      Simulate real placement interviews, get instant AI feedback, emotion-aware coaching,
+      and a live coding environment - all in one platform.
+    </p>
+
+    <div class="cta-group">
+      <button class="btn-primary" onclick="showScreen('setup')">Start Mock Interview -></button>
+      <button class="btn-secondary" onclick="showScreen('history')">Interview History</button>
+      <button class="btn-secondary" onclick="showScreen('feedback-demo')">View Sample Feedback</button>
+    </div>
+
+    <div class="features-grid">
+      <div class="feat">
+        <div class="feat-icon">&#129504;</div>
+        <div class="feat-title">AI Question Generation</div>
+        <div class="feat-desc">Dynamic questions tailored to your role and resume in real time</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">&#128522;</div>
+        <div class="feat-title">Emotion Detection</div>
+        <div class="feat-desc">Webcam-based confidence, stress, and engagement tracking</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">&#128187;</div>
+        <div class="feat-title">Live Code Editor</div>
+        <div class="feat-desc">Built-in coding round with real-time execution & output</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">&#128249;</div>
+        <div class="feat-title">Session Recording</div>
+        <div class="feat-desc">Full interview recording with timestamped improvement notes</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">&#128202;</div>
+        <div class="feat-title">Detailed Analytics</div>
+        <div class="feat-desc">Per-question scoring, communication & content analysis</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">&#127919;</div>
+        <div class="feat-title">Personalized Roadmap</div>
+        <div class="feat-desc">Custom action plan to improve weak areas before placement</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-auth" class="screen">
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="setup-header">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
+          <button onclick="showScreen('landing')" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;"><- Back</button>
+          <div style="font-family:var(--font-head);font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">InterviewIQ</div>
+        </div>
+        <h2>Sign In To Your Account</h2>
+        <p>Create a candidate account to save interviews, or use an admin account to review platform usage.</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="auth-tab-login" onclick="switchAuthMode('login')">Login</button>
+        <button class="auth-tab" id="auth-tab-register" onclick="switchAuthMode('register')">Register</button>
+      </div>
+
+      <div class="auth-panel">
+        <div class="field" id="auth-name-field" style="display:none;">
+          <label>Full Name</label>
+          <input type="text" id="auth-full-name" placeholder="Enter your full name">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="auth-email" placeholder="name@example.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="auth-password" placeholder="Enter your password">
+        </div>
+        <div class="field" id="auth-role-field" style="display:none;">
+          <label>Account Type</label>
+          <select id="auth-role">
+            <option value="candidate" selected>Candidate</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="auth-status" id="auth-status">Use your account to save interviews and see persistent history.</div>
+        <button class="btn-primary auth-submit-btn" onclick="submitAuth()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2B: HISTORY -->
+<div id="screen-history" class="screen">
+  <div class="history-shell">
+    <div class="history-header">
+      <div>
+        <div class="panel-eyebrow">Saved Sessions</div>
+        <h2>Previous Interviews</h2>
+        <p>Review status, score, and recording from your earlier mock interviews.</p>
+      </div>
+      <div class="history-actions">
+        <button class="btn-secondary" onclick="clearInterviewHistory()">Clear History</button>
+        <button class="btn-primary" onclick="showScreen('setup')">New Interview</button>
+        <button class="btn-secondary" onclick="showScreen('landing')">Back Home</button>
+      </div>
+    </div>
+
+    <div class="history-grid" id="history-list"></div>
+  </div>
+</div>
+
+<div id="screen-admin" class="screen">
+  <div class="history-shell">
+    <div class="history-header">
+      <div>
+        <div class="panel-eyebrow">Admin Console</div>
+        <h2>Recruiter Dashboard</h2>
+        <p>Review adoption, interview activity, and the most recent candidate sessions.</p>
+      </div>
+      <div class="history-actions">
+        <button class="btn-primary" onclick="loadAdminDashboard()">Refresh</button>
+        <button class="btn-secondary" onclick="showScreen('landing')">Back Home</button>
+      </div>
+    </div>
+    <div class="admin-summary" id="admin-summary"></div>
+    <div class="fb-section">
+      <div class="fb-section-header">
+        <span class="fb-section-icon">x`</span>
+        <span class="fb-section-title">Recent Candidate Sessions</span>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Interview</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="admin-session-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: SETUP -->
+<div id="screen-setup" class="screen">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;">
+  <div class="setup-card">
+    <div class="setup-header">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
+        <button onclick="showScreen('landing')" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;"><- Back</button>
+        <div style="font-family:var(--font-head);font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">InterviewIQ</div>
+      </div>
+      <h2>Set Up Your Interview</h2>
+      <p>Tell us about the role you're preparing for</p>
+    </div>
+
+    <div class="setup-grid">
+      <div class="field">
+        <label>Target Role</label>
+        <select id="target-role" onchange="toggleCustomField('target-role','custom-role-wrap')">
+          <option value="Software Engineer" selected>Software Engineer</option>
+          <option value="Frontend Developer">Frontend Developer</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="Full Stack Developer">Full Stack Developer</option>
+          <option value="Mobile App Developer">Mobile App Developer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Data Scientist">Data Scientist</option>
+          <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+          <option value="AI Engineer">AI Engineer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Cloud Engineer">Cloud Engineer</option>
+          <option value="QA Engineer">QA Engineer</option>
+          <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+          <option value="Business Analyst">Business Analyst</option>
+          <option value="Product Manager">Product Manager</option>
+          <option value="System Design Engineer">System Design Engineer</option>
+          <option value="Other">Other / Custom</option>
+        </select>
+        <div class="field sub-field hidden" id="custom-role-wrap">
+          <input type="text" id="custom-role" placeholder="Enter custom role">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Company</label>
+        <select id="target-company" onchange="toggleCustomField('target-company','custom-company-wrap')">
+          <option value="Google" selected>Google</option>
+          <option value="Microsoft">Microsoft</option>
+          <option value="Amazon">Amazon</option>
+          <option value="Meta">Meta</option>
+          <option value="Netflix">Netflix</option>
+          <option value="Apple">Apple</option>
+          <option value="Adobe">Adobe</option>
+          <option value="Oracle">Oracle</option>
+          <option value="Intel">Intel</option>
+          <option value="NVIDIA">NVIDIA</option>
+          <option value="TCS">TCS</option>
+          <option value="Infosys">Infosys</option>
+          <option value="Wipro">Wipro</option>
+          <option value="HCLTech">HCLTech</option>
+          <option value="Accenture">Accenture</option>
+          <option value="Capgemini">Capgemini</option>
+          <option value="Cognizant">Cognizant</option>
+          <option value="Zoho">Zoho</option>
+          <option value="Freshworks">Freshworks</option>
+          <option value="Startup">Startup</option>
+          <option value="Other">Other / Custom</option>
+        </select>
+        <div class="field sub-field hidden" id="custom-company-wrap">
+          <input type="text" id="custom-company" placeholder="Enter custom company">
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-grid">
+      <div class="field">
+        <label>Experience Level</label>
+        <select id="experience-level">
+          <option value="Fresher" selected>Fresher</option>
+          <option value="Internship">Internship</option>
+          <option value="0-2 years">0-2 years</option>
+          <option value="2-5 years">2-5 years</option>
+          <option value="5+ years">5+ years</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Focus Area</label>
+        <select id="focus-area">
+          <option value="General" selected>General</option>
+          <option value="DSA">DSA</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Backend">Backend</option>
+          <option value="Full Stack">Full Stack</option>
+          <option value="Data">Data</option>
+          <option value="System Design">System Design</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setup-grid">
+      <div class="field">
+        <label>Preferred Coding Language</label>
+        <select id="preferred-language">
+          <option value="Python" selected>Python</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="Java">Java</option>
+          <option value="C++">C++</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Answer Mode</label>
+        <select id="answer-mode">
+          <option value="Write + Voice" selected>Write + Voice</option>
+          <option value="Voice Preferred">Voice Preferred</option>
+          <option value="Write Preferred">Write Preferred</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setup-grid">
+      <div class="field">
+        <label>Spoken Language</label>
+        <select id="spoken-language">
+          <option value="en-US" selected>English</option>
+          <option value="en-IN">English (India)</option>
+          <option value="hi-IN">Hindi</option>
+          <option value="ta-IN">Tamil</option>
+          <option value="te-IN">Telugu</option>
+          <option value="kn-IN">Kannada</option>
+          <option value="ml-IN">Malayalam</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>English Speaking Support</label>
+        <select id="english-support-mode">
+          <option value="Coach" selected>Coach me while speaking</option>
+          <option value="Balanced">Balanced support</option>
+          <option value="Minimal">Minimal support</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Interview Type</label>
+      <div class="type-grid">
+        <div class="type-option selected" onclick="selectType(this,'Technical')">
+          <div class="type-icon">Tech</div>
+          <div class="type-label">Technical</div>
+        </div>
+        <div class="type-option" onclick="selectType(this,'Behavioral')">
+          <div class="type-icon">Story</div>
+          <div class="type-label">Behavioral</div>
+        </div>
+        <div class="type-option" onclick="selectType(this,'HR')">
+          <div class="type-icon">HR</div>
+          <div class="type-label">HR Round</div>
+        </div>
+        <div class="type-option" onclick="selectType(this,'Mixed')">
+          <div class="type-icon">Mix</div>
+          <div class="type-label">Mixed</div>
+        </div>
+        <div class="type-option" onclick="selectType(this,'Coding')">
+          <div class="type-icon">Code</div>
+          <div class="type-label">Coding</div>
+        </div>
+        <div class="type-option" onclick="selectType(this,'System Design')">
+          <div class="type-icon">Design</div>
+          <div class="type-label">System Design</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Difficulty</label>
+      <div class="diff-row">
+        <button class="diff-btn easy" onclick="selectDiff(this,'easy')">Easy</button>
+        <button class="diff-btn medium sel" onclick="selectDiff(this,'medium')">Medium</button>
+        <button class="diff-btn hard" onclick="selectDiff(this,'hard')">Hard</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Key Skills / Tech Stack</label>
+      <input type="text" id="skills-input" placeholder="e.g. Python, React, SQL" value="Python, Data Structures, React, SQL">
+    </div>
+
+    <div class="field">
+      <label>Resume Upload</label>
+      <input type="file" id="resume-file" accept=".pdf,.txt" onchange="handleResumeUpload(event)">
+      <div class="upload-meta" id="resume-upload-meta">Upload a PDF or TXT resume so the interviewer can ask resume-based questions too.</div>
+      <div class="resume-preview hidden" id="resume-preview"></div>
+    </div>
+
+    <div class="field">
+      <label>Duration</label>
+      <select id="duration-select">
+        <option value="5">Quick Round  5 questions</option>
+        <option value="8" selected>Standard  8 questions</option>
+        <option value="12">Full Interview  12 questions</option>
+      </select>
+    </div>
+
+<button class="btn-primary" onclick="startInterview()">
+  Begin Interview  
+</button>
+  </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: INTERVIEW -->
+<div id="screen-interview" class="screen">
+
+  <!-- S& KEEP SIDEBAR (ONLY META INFO) -->
+  <div class="interview-sidebar">
+    <div class="sidebar-logo">InterviewIQ</div>
+
+    <div class="sidebar-meta">
+      <div class="meta-row">
+        <span class="meta-key">Role</span>
+        <span class="meta-val" id="meta-role"></span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-key">Type</span>
+        <span class="meta-val" id="meta-type"></span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-key">Difficulty</span>
+        <span class="meta-val" id="meta-diff"></span>
+      </div>
+    </div>
+
+    <div class="timer-display">
+      <div class="timer-label">Time Remaining</div>
+      <div class="timer-val" id="timer">00:00</div>
+    </div>
+  </div>
+
+  
+  <div class="interview-main">
+    <div class="interview-topbar">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progress-text">1 / 8</div>
+      <div class="emotion-badge">
+        <div class="emotion-indicator" id="emotion-dot" style="background:var(--green)"></div>
+        <span id="emotion-label">Loading expression AI...</span>
+      </div>
+      <button class="interview-stop-btn" onclick="stopInterview()">Stop Interview</button>
+      <button class="interview-home-btn" onclick="showScreen('landing')">Back Home</button>
+    </div>
+
+    <div class="interview-body">
+      <div class="question-panel" id="question-panel">
+        <div class="question-header">
+          <span class="q-tag technical" id="q-tag">Technical</span>
+          <div class="q-difficulty-dot" id="diff-dot" style="background:var(--amber)"></div>
+          <span style="font-size:12px;color:var(--text3)" id="q-num-label">Question 1</span>
+        </div>
+
+        <div class="question-card">
+          <div class="question-toolbar">
+            <div class="ai-bot">
+              <div class="ai-avatar-shell">
+                <div class="ai-avatar" id="interviewer-avatar">RI</div>
+                <div class="avatar-live-dot"></div>
+              </div>
+              <div class="ai-bot-copy">
+                <div class="bot-label-row">
+                  <div class="bot-label">Lead Interviewer</div>
+                  <div class="bot-pill" id="interviewer-pill">Product loop</div>
+                </div>
+                <div class="bot-name" id="interviewer-name">Rachel Iyer</div>
+                <div class="bot-subtitle" id="interviewer-subtitle">Senior Hiring Panel - InterviewIQ</div>
+                <div id="ai-status">Idle.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="question-box">
+            <div class="question-text" id="question-text">Loading question...</div>
+          </div>
+
+          <button type="button" onclick="repeatCurrentQuestion()">Repeat Question</button>
+
+          <div class="question-tips" id="question-tips">
+            <div class="tips-title">Hint</div>
+            <ul class="tips-list" id="tips-list"></ul>
+          </div>
+        </div>
+
+        <div class="answer-pane active" id="pane-write">
+          <textarea id="answer-text-area" placeholder="Type your answer here... Be structured - use frameworks like STAR, explain your reasoning step by step."></textarea>
+          <div class="answer-helper" id="voice-helper">You can type, speak, or combine both. Spoken transcript will be added to your answer.</div>
+          <div class="speech-assist-card">
+            <div class="speech-assist-top">
+              <div>
+                <div class="panel-eyebrow">Speaking Support</div>
+                <div class="speech-assist-title">Voice Recognition & English Coach</div>
+              </div>
+              <div class="speech-assist-badge" id="speech-language-badge">English</div>
+            </div>
+            <div class="speech-conversation" id="speech-conversation">
+              <div class="speech-bubble speech-bubble-ai">
+                <span class="speech-bubble-role">AI Interviewer</span>
+                <p id="speech-ai-bubble">The interviewer question will appear here.</p>
+              </div>
+              <div class="speech-bubble speech-bubble-user">
+                <span class="speech-bubble-role">Your Live Answer</span>
+                <p id="speech-user-bubble">Start recording and your spoken answer will appear live here.</p>
+              </div>
+            </div>
+            <div class="speech-transcript-preview" id="speech-transcript-preview">Your live transcript will appear here while you speak.</div>
+            <div class="speech-coach-grid">
+              <div class="speech-coach-item">
+                <div class="speech-coach-label">Fluency</div>
+                <div class="speech-coach-value" id="speech-fluency">Waiting</div>
+              </div>
+              <div class="speech-coach-item">
+                <div class="speech-coach-label">Filler Words</div>
+                <div class="speech-coach-value" id="speech-filler-count">0</div>
+              </div>
+              <div class="speech-coach-item">
+                <div class="speech-coach-label">English Tips</div>
+                <div class="speech-coach-value" id="speech-support-mode-view">Coach</div>
+              </div>
+              <div class="speech-coach-item">
+                <div class="speech-coach-label">Pace</div>
+                <div class="speech-coach-value" id="speech-pace-view">Calibrating</div>
+              </div>
+              <div class="speech-coach-item">
+                <div class="speech-coach-label">Confidence Cue</div>
+                <div class="speech-coach-value" id="speech-confidence-view">Warming up</div>
+              </div>
+              <div class="speech-coach-item">
+                <div class="speech-coach-label">Coach Debrief</div>
+                <div class="speech-coach-value" id="speech-review-view">Stop recording for a focused review.</div>
+              </div>
+            </div>
+            <div class="speech-coach-note" id="speech-coach-note">We'll help you speak more clearly, even if English is not your strongest language.</div>
+          </div>
+        </div>
+
+        <div class="answer-controls">
+          <button class="record-btn" id="record-btn" onclick="toggleRecord()">
+            <div class="record-dot"></div>
+            <span id="record-label">Record Voice</span>
+          </button>
+          <div class="action-group">
+            <button id="skip-btn" onclick="nextQuestion()">Skip</button>
+            <button class="btn-next" onclick="submitAnswer()">Submit Answer <span>-></span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="camera-card">
+          <div class="panel-heading">
+            <div>
+              <div class="panel-eyebrow">Live Presence</div>
+              <h3>Camera & Emotion AI</h3>
+            </div>
+            <div class="live-pill"><span class="cam-dot"></span> Live</div>
+          </div>
+
+          <div class="webcam-box">
+            <video id="webcam-video" autoplay muted playsinline></video>
+            <div class="webcam-overlay">
+              <div class="webcam-status">Camera feed active</div>
+            </div>
+          </div>
+          <div id="cam-status" class="cam-status-text">Starting camera and expression model...</div>
+        </div>
+
+        <div class="stats-row">
+          <div class="posture-card">
+            <div class="posture-title">Presence Score</div>
+            <div class="posture-score" id="confidence-score">78</div>
+            <div class="posture-label" id="presence-caption">Waiting for live face detection</div>
+          </div>
+          <div class="posture-card">
+            <div class="posture-title">Speech Pace</div>
+            <div class="posture-score posture-score-amber" id="wpm-display">-</div>
+            <div class="posture-label">demo words/min</div>
+          </div>
+        </div>
+
+        <div class="emotion-panel">
+          <div class="panel-heading compact">
+            <div>
+              <div class="panel-eyebrow">Real-Time Analysis</div>
+              <h3>Facial Expression Signals</h3>
+            </div>
+          </div>
+          <div class="emotion-meters" id="emotion-meters"></div>
+        </div>
+
+        <div class="coding-panel" id="coding-panel">
+          <div class="code-topbar">
+            <span style="font-size:12px;font-weight:600;color:var(--text2);">Code Editor</span>
+            <select class="lang-select" id="lang-select" onchange="changeLang()">
+              <option value="python">Python</option>
+              <option value="javascript">JavaScript</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+            </select>
+            <div style="flex:1"></div>
+            <button class="code-run-btn" onclick="runCode()">Run</button>
+          </div>
+          <textarea id="code-editor" spellcheck="false" placeholder="# Write your solution here..."></textarea>
+          <div class="code-output" id="code-output">
+            <div class="output-line info">// Output will appear here after running your code</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 4: FEEDBACK -->
+<div id="screen-feedback" class="screen">
+  <div class="feedback-container">
+    <div class="feedback-hero">
+      <div style="font-size:3rem;margin-bottom:1rem;">Score</div>
+      <h2>Interview Complete!</h2>
+      <p>Here's your detailed performance breakdown</p>
+      <div class="scorecard-summary" id="scorecard-summary">
+        <div><span>Role</span><strong id="summary-role">Software Engineer</strong></div>
+        <div><span>Status</span><strong id="summary-status">Completed</strong></div>
+        <div><span>Answered</span><strong id="summary-answered">0 / 0</strong></div>
+        <div><span>Duration</span><strong id="summary-duration">0s</strong></div>
+        <div><span>Verdict</span><strong id="summary-verdict">Practice ready</strong></div>
+      </div>
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg viewBox="0 0 160 160" width="160" height="160">
+            <circle cx="80" cy="80" r="65" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+            <circle cx="80" cy="80" r="65" fill="none" stroke="url(#score-grad)" stroke-width="10"
+              stroke-dasharray="408" stroke-dashoffset="82" stroke-linecap="round" id="score-arc"/>
+            <defs>
+              <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7c6dfa"/>
+                <stop offset="100%" stop-color="#22d3a0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="score-ring-num">
+            <div class="score-big" id="overall-score">80</div>
+            <div class="score-label">/100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-cards">
+      <div class="score-card">
+        <div class="score-card-label">Content</div>
+        <div class="score-card-val" style="color:var(--green)" id="sc-content">82</div>
+        <div class="score-card-sub">Strong technical depth</div>
+      </div>
+      <div class="score-card">
+        <div class="score-card-label">Communication</div>
+        <div class="score-card-val" style="color:var(--accent2)" id="sc-comm">75</div>
+        <div class="score-card-sub">Good clarity, pace a bit fast</div>
+      </div>
+      <div class="score-card">
+        <div class="score-card-label">Confidence</div>
+        <div class="score-card-val" style="color:var(--amber)" id="sc-conf">78</div>
+        <div class="score-card-sub">Slight hesitation noted</div>
+      </div>
+      <div class="score-card">
+        <div class="score-card-label">Coding</div>
+        <div class="score-card-val" style="color:var(--blue)" id="sc-code">85</div>
+        <div class="score-card-sub">Efficient solution</div>
+      </div>
+    </div>
+    <video id="playback" controls width="400"></video>
+    <div class="feedback-sections">
+      <div class="fb-section">
+        <div class="fb-section-header">
+          <span class="fb-section-icon">Review</span>
+          <span class="fb-section-title">Question-by-Question Review</span>
+        </div>
+        <div class="q-review" id="q-review-list"></div>
+      </div>
+
+      <div class="fb-section">
+        <div class="fb-section-header">
+          <span class="fb-section-icon">Improve</span>
+          <span class="fb-section-title">Areas to Improve</span>
+        </div>
+        <div class="improve-grid" id="improve-grid"></div>
+      </div>
+
+      <div class="fb-section">
+        <div class="fb-section-header">
+          <span class="fb-section-icon">ML</span>
+          <span class="fb-section-title">ML/DL Readiness Predictor</span>
+        </div>
+        <div class="ai-summary-grid" id="ai-summary-grid"></div>
+        <div class="ai-next-steps" id="ai-next-steps"></div>
+        <div class="email-delivery-status" id="email-delivery-status">Email report status will appear here.</div>
+      </div>
+
+      <div class="fb-section">
+        <div class="fb-section-header">
+          <span class="fb-section-icon">Emotion</span>
+          <span class="fb-section-title">Emotional Profile</span>
+        </div>
+        <div class="emotion-summary" id="feedback-emotion-summary"></div>
+      </div>
+
+      <div class="fb-section">
+        <div class="fb-section-header">
+          <span class="fb-section-icon">Record</span>
+          <span class="fb-section-title">Session Recording & Timeline</span>
+        </div>
+        <div class="recording-section">
+          <div class="rec-icon">Rec</div>
+          <div class="rec-title">Interview Recording Saved</div>
+          <div class="rec-sub">Your session was recorded. Key improvement moments are marked below.</div>
+          <div style="background:var(--bg3);border-radius:var(--radius);padding:1rem;margin-bottom:1.5rem;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+              <button style="background:var(--accent);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;" id="play-btn" onclick="togglePlay()">></button>
+              <div style="flex:1;height:6px;background:var(--bg4);border-radius:3px;cursor:pointer;position:relative;" onclick="seekTimeline(event)" id="tl-bar">
+                <div style="height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;transition:width 0.3s;" id="tl-progress"></div>
+                <div title="Hesitation" style="position:absolute;top:-4px;left:22%;width:3px;height:14px;background:var(--amber);border-radius:1px;"></div>
+                <div title="Low eye contact" style="position:absolute;top:-4px;left:45%;width:3px;height:14px;background:var(--red);border-radius:1px;"></div>
+                <div title="Great answer!" style="position:absolute;top:-4px;left:67%;width:3px;height:14px;background:var(--green);border-radius:1px;"></div>
+              </div>
+              <span style="font-family:var(--font-mono);font-size:12px;color:var(--text2)" id="rec-time">0:00 / 24:32</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><span class="tl-time">0:45</span><div class="tl-marker" style="background:var(--green)"></div><span class="tl-text">Strong opening - introduced yourself confidently</span></div>
+            <div class="tl-item"><span class="tl-time">3:12</span><div class="tl-marker" style="background:var(--amber)"></div><span class="tl-text">Hesitation detected - filler words during Q2</span></div>
+            <div class="tl-item"><span class="tl-time">7:30</span><div class="tl-marker" style="background:var(--red)"></div><span class="tl-text">Eye contact dropped during system design explanation</span></div>
+            <div class="tl-item"><span class="tl-time">12:55</span><div class="tl-marker" style="background:var(--green)"></div><span class="tl-text">Excellent coding solution - optimal time complexity</span></div>
+            <div class="tl-item"><span class="tl-time">18:20</span><div class="tl-marker" style="background:var(--amber)"></div><span class="tl-text">Answer too brief - behavioral Q lacked STAR structure</span></div>
+            <div class="tl-item"><span class="tl-time">23:10</span><div class="tl-marker" style="background:var(--green)"></div><span class="tl-text">Strong closing - good questions asked to interviewer</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+</button>
+    <div class="feedback-actions">
+      <button class="btn-secondary" onclick="downloadFeedbackPdf()">Download PDF</button>
+      <button class="btn-secondary" onclick="shareFeedbackPdf()">Share PDF</button>
+      <button class="btn-primary" onclick="showScreen('setup')">Practice Again</button>
+      <button class="btn-secondary" onclick="showScreen('history')">View History</button>
+      <button class="btn-secondary" onclick="showScreen('landing')">Home</button>
+    </div>
+  </div>
+</div>
+
+<div class="corner-copilot" id="corner-copilot">
+  <button class="copilot-launcher" onclick="toggleCopilot()" aria-label="Open InterviewIQ copilot">
+    <span>IQ</span>
+    <small id="copilot-pulse">Ask</small>
+  </button>
+  <div class="copilot-panel" id="copilot-panel">
+    <div class="copilot-head">
+      <div>
+        <strong>InterviewIQ Copilot</strong>
+        <span>Quick coaching while you practice</span>
+      </div>
+      <button onclick="toggleCopilot(false)" aria-label="Close copilot">x</button>
+    </div>
+    <div class="copilot-messages" id="copilot-messages">
+      <div class="copilot-msg bot">Hi, I can help you frame answers, reduce filler words, or prepare a follow-up question.</div>
+    </div>
+    <div class="copilot-input-row">
+      <input id="copilot-input" type="text" placeholder="Ask for a quick interview tip" onkeydown="handleCopilotKey(event)">
+      <button onclick="sendCopilotMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = {
+  Technical: [
+    { q:"Explain the difference between stack and heap memory. When would you prefer one over the other?", tags:"technical", tips:["Discuss memory allocation mechanisms","Mention scope and lifetime of variables","Give practical code examples"] },
+    { q:"What is the time complexity of Binary Search and why? Walk me through the algorithm.", tags:"technical", tips:["Start with the algorithm logic first","Prove the O(log n) bound mathematically","Mention edge cases like duplicates"] },
+    { q:"How does React's Virtual DOM work? What problem does it solve?", tags:"technical", tips:["Compare to real DOM manipulation","Explain diffing algorithm","Mention reconciliation process"] },
+    { q:"Design a URL shortener like bit.ly. What components would you use?", tags:"technical", tips:["Start with high-level architecture","Discuss database choice and why","Consider scale  millions of URLs"] },
+    { q:"Explain how database indexing works. When should you NOT use an index?", tags:"technical", tips:["Use a real-world analogy","Discuss B-tree structure","Mention write overhead tradeoff"] },
+    { q:"What are the SOLID principles? Give an example of each.", tags:"technical", tips:["Take it one principle at a time","Use code examples if possible","Relate to real project experience"] },
+    { q:"How does async/await differ from Promises in JavaScript? When would you use each?", tags:"technical", tips:["Start with the problem they solve","Show code comparison","Mention error handling differences"] },
+    { q:"Explain REST vs GraphQL. When would you choose GraphQL?", tags:"technical", tips:["Cover over-fetching/under-fetching problem","Discuss schema and type system","Mention caching considerations"] },
+  ],
+  Behavioral: [
+    { q:"Tell me about a time you faced a significant technical challenge. How did you resolve it?", tags:"behavioral", tips:["Use the STAR framework: Situation, Task, Action, Result","Be specific  avoid vague stories","Quantify the impact if possible"] },
+    { q:"Describe a situation where you had to work with a difficult team member.", tags:"behavioral", tips:["Focus on your actions, not blaming others","Show empathy and communication skills","End with a positive resolution"] },
+    { q:"Tell me about a time you failed. What did you learn?", tags:"behavioral", tips:["Be honest  don't say 'I never fail'","Show self-awareness and growth mindset","Describe concrete lessons learned"] },
+    { q:"How do you prioritize tasks when you have multiple deadlines?", tags:"behavioral", tips:["Mention a specific framework or system","Give a real example","Show you communicate proactively"] },
+  ],
+  HR: [
+    { q:"Tell me about yourself and why you're interested in this role.", tags:"hr", tips:["Keep it professional  2 minutes max","Connect your background to this specific role","End with enthusiasm for the position"] },
+    { q:"Where do you see yourself in 5 years?", tags:"hr", tips:["Show ambition but stay realistic","Connect goals to this company's growth","Avoid vague answers"] },
+    { q:"What is your greatest strength, and how has it helped you?", tags:"hr", tips:["Choose a strength relevant to the role","Back it up with a specific example","Avoid generic answers like 'hardworking'"] },
+    { q:"Why should we hire you over other candidates?", tags:"hr", tips:["Highlight your unique combination of skills","Show you've researched the company","Be confident but not arrogant"] },
+  ],
+  Coding: [
+    { q:"Write a function to find the two numbers in an array that sum to a target value. Optimize for O(n) time.", tags:"coding", tips:["Think about the brute force first","Then optimize using a hash map","Handle edge cases: no solution, duplicates"] },
+    { q:"Implement a function to detect a cycle in a linked list.", tags:"coding", tips:["Floyd's tortoise and hare algorithm","Explain why two pointers work","Consider space complexity  O(1) is optimal"] },
+    { q:"Write a function to reverse a binary tree (mirror it).", tags:"coding", tips:["Recursive approach is elegant here","Think about the base case first","Iterative solution uses a queue"] },
+    { q:"Find the longest substring without repeating characters.", tags:"coding", tips:["Sliding window technique","Use a set to track seen characters","Walk through an example first"] },
+  ],
+  Mixed: [
+    { q:"Tell me about yourself and your technical background.", tags:"hr", tips:["2-minute pitch","Connect to the role","Show passion"] },
+    { q:"What is Big O notation? Explain with examples.", tags:"technical", tips:["Define it clearly","Give O(1), O(n), O(n) examples","Mention why it matters"] },
+    { q:"Write a function to check if a string is a palindrome.", tags:"coding", tips:["Define palindrome first","Two-pointer is optimal","Handle spaces and case if mentioned"] },
+    { q:"Tell me about a project you're most proud of.", tags:"behavioral", tips:["Describe your specific role","Mention technical decisions made","Quantify the outcome"] },
+    { q:"How does HTTP work at a high level?", tags:"technical", tips:["Request-response cycle","Status codes","Statelessness"] },
+    { q:"Describe a time you learned a new technology quickly.", tags:"behavioral", tips:["Show learning process","Mention resources used","Give outcome"] },
+    { q:"What's your approach to debugging a production issue?", tags:"technical", tips:["Structured approach  isolate, hypothesize, test","Mention logging and monitoring","Communication with team"] },
+    { q:"Why do you want to work here?", tags:"hr", tips:["Research the company first","Connect to your values","Be genuine"] },
+  ],
+  'System Design': [
+    { q:"Design a scalable notification system (push, email, SMS) for millions of users.", tags:"technical", tips:["Think about message queues","Discuss fan-out strategies","Consider delivery guarantees"] },
+    { q:"How would you design Twitter's feed? Walk through the architecture.", tags:"technical", tips:["Pull vs push model for feed generation","Caching strategies for hot users","Database sharding approach"] },
+    { q:"Design a distributed cache like Redis. What are the key trade-offs?", tags:"technical", tips:["Eviction policies: LRU, LFU","Consistency vs availability","Replication strategies"] },
+    { q:"How would you build a rate limiter for an API?", tags:"technical", tips:["Token bucket vs sliding window","Distributed rate limiting challenges","Storage options: Redis vs in-memory"] },
+  ]
+};
+
+const BASIC_EDITOR_TEMPLATES = {
+  python: `def solve():
+    # Write your solution here
+    pass
+
+
+if __name__ == "__main__":
+    solve()`,
+  javascript: `function solve() {
+  // Write your solution here
+}
+
+solve();`,
+  java: `class Solution {
+    public void solve() {
+        // Write your solution here
+    }
+}`,
+  cpp: `#include <iostream>
+using namespace std;
+
+void solve() {
+    // Write your solution here
+}
+
+int main() {
+    solve();
+    return 0;
+}`
+};
+
+const CODING_TEMPLATES = {
+  array_hashmap: {
+    python: `def solve(nums, target):
+    seen = {}
+    # Write your logic here
+    for i, num in enumerate(nums):
+        pass
+    return []
+
+
+print(solve([2, 7, 11, 15], 9))`,
+    javascript: `function solve(nums, target) {
+  const seen = new Map();
+  // Write your logic here
+  for (let i = 0; i < nums.length; i++) {
+  }
+  return [];
+}
+
+console.log(solve([2, 7, 11, 15], 9));`,
+    java: `import java.util.*;
+
+class Solution {
+    public int[] solve(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        // Write your logic here
+        for (int i = 0; i < nums.length; i++) {
+        }
+        return new int[]{};
+    }
+}`,
+    cpp: `#include <vector>
+#include <unordered_map>
+using namespace std;
+
+vector<int> solve(vector<int>& nums, int target) {
+    unordered_map<int, int> seen;
+    // Write your logic here
+    for (int i = 0; i < nums.size(); i++) {
+    }
+    return {};
+}`
+  },
+  linked_list: {
+    python: `class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+def solve(head):
+    current = head
+    # Write your linked-list logic here
+    while current:
+        current = current.next
+    return head`,
+    javascript: `function ListNode(val, next = null) {
+  this.val = val;
+  this.next = next;
+}
+
+function solve(head) {
+  let current = head;
+  // Write your linked-list logic here
+  while (current) {
+    current = current.next;
+  }
+  return head;
+}`,
+    java: `class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) { this.val = val; }
+}
+
+class Solution {
+    public ListNode solve(ListNode head) {
+        ListNode current = head;
+        // Write your linked-list logic here
+        while (current != null) {
+            current = current.next;
+        }
+        return head;
+    }
+}`,
+    cpp: `struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+ListNode* solve(ListNode* head) {
+    ListNode* current = head;
+    // Write your linked-list logic here
+    while (current != nullptr) {
+        current = current->next;
+    }
+    return head;
+}`
+  },
+  tree_graph: {
+    python: `class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+def solve(root):
+    if not root:
+        return None
+    # Write your tree/graph logic here
+    return root.val`,
+    javascript: `function solve(root) {
+  if (!root) return null;
+  // Write your tree/graph logic here
+  return root.val;
+}`,
+    java: `class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int val) { this.val = val; }
+}
+
+class Solution {
+    public int solve(TreeNode root) {
+        if (root == null) return -1;
+        // Write your tree/graph logic here
+        return root.val;
+    }
+}`,
+    cpp: `struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+int solve(TreeNode* root) {
+    if (root == nullptr) return -1;
+    // Write your tree/graph logic here
+    return root->val;
+}`
+  },
+  dynamic_programming: {
+    python: `def solve(nums):
+    dp = [0] * (len(nums) + 1)
+    # Write your DP transition here
+    for i in range(1, len(nums) + 1):
+        pass
+    return dp[-1]`,
+    javascript: `function solve(nums) {
+  const dp = new Array(nums.length + 1).fill(0);
+  // Write your DP transition here
+  for (let i = 1; i <= nums.length; i++) {
+  }
+  return dp[nums.length];
+}`,
+    java: `class Solution {
+    public int solve(int[] nums) {
+        int[] dp = new int[nums.length + 1];
+        // Write your DP transition here
+        for (int i = 1; i <= nums.length; i++) {
+        }
+        return dp[nums.length];
+    }
+}`,
+    cpp: `#include <vector>
+using namespace std;
+
+int solve(vector<int>& nums) {
+    vector<int> dp(nums.size() + 1, 0);
+    // Write your DP transition here
+    for (int i = 1; i <= nums.size(); i++) {
+    }
+    return dp[nums.size()];
+}`
+  },
+  string_problem: {
+    python: `def solve(s):
+    left = 0
+    # Write your string logic here
+    for right in range(len(s)):
+        pass
+    return 0`,
+    javascript: `function solve(s) {
+  let left = 0;
+  // Write your string logic here
+  for (let right = 0; right < s.length; right++) {
+  }
+  return 0;
+}`,
+    java: `class Solution {
+    public int solve(String s) {
+        int left = 0;
+        // Write your string logic here
+        for (int right = 0; right < s.length(); right++) {
+        }
+        return 0;
+    }
+}`,
+    cpp: `#include <string>
+using namespace std;
+
+int solve(string s) {
+    int left = 0;
+    // Write your string logic here
+    for (int right = 0; right < s.size(); right++) {
+    }
+    return 0;
+}`
+  },
+  generic: {
+    python: `def solve(input_data):
+    # Write your solution here
+    return input_data`,
+    javascript: `function solve(inputData) {
+  // Write your solution here
+  return inputData;
+}`,
+    java: `class Solution {
+    public Object solve(Object inputData) {
+        // Write your solution here
+        return inputData;
+    }
+}`,
+    cpp: `#include <iostream>
+using namespace std;
+
+void solve() {
+    // Write your solution here
+}`
+  }
+};
+
+const FACE_API_MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model';
+const API_BASE = localStorage.getItem('INTERVIEWIQ_API_BASE')
+  || (location.hostname.includes('netlify.app')
+    ? 'https://interviewiq-backend-navya29.onrender.com'
+    : 'http://localhost:5000');
+const AUTH_STORAGE_KEY = 'interviewiq_auth_token';
+const EMOTION_METRICS = [
+  { name: "Confidence", color: "#22d3a0", val: 0 },
+  { name: "Stress", color: "#ffb547", val: 0 },
+  { name: "Engagement", color: "#4fa3ff", val: 0 },
+  { name: "Calmness", color: "#f472b6", val: 0 },
+];
+
+let state = {
+  role: '', type: 'Technical', difficulty: 'medium',
+  company: '', skills: '', maxQuestions: 0,
+  experienceLevel: 'Fresher', focusArea: 'General', preferredLanguage: 'Python', answerMode: 'Write + Voice',
+  spokenLanguage: 'en-US', englishSupportMode: 'Coach',
+  questions: [], currentQ: -1, answers: [],
+  timerSecs: 0, timerInterval: null, questionTimeLimitSecs: 300, timerHandlingExpiry: false,
+  recording: false, wpmInterval: null,
+  emotionInterval: null, isPlaying: false,
+  playProgress: 0, playInterval: null,
+  busy: false, currentQuestionText: '',
+  recognition: null, voiceTranscript: '', voiceInterim: '', voiceStartedAt: null,
+  voiceShouldContinue: false, voiceRestartTimer: null, voiceStopRequested: false,
+  answerTextBeforeRecording: '',
+  voiceTranscriptionPending: false, lastServerTranscript: '',
+  liveSpeechRecorder: null, liveSpeechStream: null, liveSpeechChunkCount: 0, liveSpeechUsingApi: false,
+  speechInsights: { fillerCount: 0, fillerWords: [], fluency: 'Waiting', note: 'We\'ll help you speak more clearly, even if English is not your strongest language.' },
+  emotionModelReady: false, emotionModelPromise: null, emotionBusy: false,
+  liveEmotionMetrics: { confidence: 0, stress: 0, engagement: 0, calmness: 0, presence: 0 },
+  currentCodingTopic: null,
+  latestRecordingUrl: '', latestRecordingDataUrl: '', latestOverallScore: 0,
+  latestReport: null, sessionId: '',
+  sessionStartedAt: null,
+  interviewerPersona: null,
+  preferredSpeechVoice: null,
+  authMode: 'login', authToken: localStorage.getItem(AUTH_STORAGE_KEY) || '', currentUser: null,
+  isFinishingInterview: false,
+  interviewActive: false, interviewEndReason: 'completed',
+  resumeText: '', resumeFileName: '', resumeParsing: false,
+  copilotOpen: false,
+};
+
+function showScreen(id) {
+  if ((id === 'setup' || id === 'history') && !state.authToken) {
+    id = 'auth';
+  }
+  if (id === 'admin' && (!state.currentUser || state.currentUser.role !== 'admin')) {
+    id = state.authToken ? 'landing' : 'auth';
+  }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById('screen-' + id);
+  if (s) { s.classList.add('active'); }
+  if (id === 'feedback' || id === 'feedback-demo') {
+    document.getElementById('screen-feedback').classList.add('active');
+    buildFeedback();
+  }
+  if (id === 'history') {
+    buildHistoryScreen();
+  }
+  if (id === 'admin') {
+    loadAdminDashboard();
+  }
+}
+
+const INTERVIEW_HISTORY_KEY = 'interview_history_v1';
+const INTERVIEWER_PERSONAS = [
+  { name: 'Rachel Iyer', title: 'Senior Hiring Panel', theme: 'Product loop' },
+  { name: 'Daniel Park', title: 'Engineering Interviewer', theme: 'Technical screen' },
+  { name: 'Maya Shah', title: 'Bar Raiser', theme: 'Leadership round' },
+  { name: 'Aarav Mehta', title: 'Platform Architect', theme: 'System design loop' },
+];
+
+function getInterviewHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(INTERVIEW_HISTORY_KEY) || '[]');
+  } catch (err) {
+    console.error('HISTORY READ ERROR:', err);
+    return [];
+  }
+}
+
+function setInterviewHistory(history) {
+  localStorage.setItem(INTERVIEW_HISTORY_KEY, JSON.stringify(history));
+}
+
+function chooseInterviewerPersona() {
+  const source = `${state.company || ''}|${state.role || ''}|${state.type || ''}`;
+  const seed = Array.from(source).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const persona = INTERVIEWER_PERSONAS[seed % INTERVIEWER_PERSONAS.length];
+  state.interviewerPersona = persona;
+  const initials = persona.name.split(/\s+/).map(part => part[0]).slice(0, 2).join('').toUpperCase();
+  const companyLabel = state.company ? `${state.company} loop` : persona.theme;
+  const roleLabel = state.type === 'Coding' ? `${persona.title}  Coding round` : `${persona.title}  ${state.type}`;
+
+  const avatarEl = document.getElementById('interviewer-avatar');
+  const nameEl = document.getElementById('interviewer-name');
+  const subtitleEl = document.getElementById('interviewer-subtitle');
+  const pillEl = document.getElementById('interviewer-pill');
+
+  if (avatarEl) {
+    avatarEl.innerHTML = `
+      <div class="avatar-character" aria-label="${persona.name}">
+        <div class="avatar-hair"></div>
+        <div class="avatar-face">
+          <span class="avatar-eye left"></span>
+          <span class="avatar-eye right"></span>
+          <span class="avatar-smile"></span>
+        </div>
+        <div class="avatar-badge">${initials}</div>
+      </div>`;
+  }
+  if (nameEl) nameEl.textContent = persona.name;
+  if (subtitleEl) subtitleEl.textContent = roleLabel;
+  if (pillEl) pillEl.textContent = companyLabel;
+}
+
+function primeSpeechVoices() {
+  const voices = speechSynthesis.getVoices();
+  if (!voices?.length) return;
+  state.preferredSpeechVoice =
+    voices.find(v => /en-(in|us|gb)/i.test(v.lang) && /natural|neural|aria|jenny|samantha|zira|google/i.test(v.name))
+    || voices.find(v => /en-(in|us|gb)/i.test(v.lang))
+    || voices[0]
+    || null;
+}
+
+function humanizeQuestionForSpeech(text) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!clean) return clean;
+  const personaName = state.interviewerPersona?.name?.split(' ')[0] || 'your interviewer';
+  const openings = [
+    `Alright, let's take this one step at a time.`,
+    `Good, ${personaName} here. I'd like to understand your thinking on this.`,
+    `Okay, imagine this came up in the actual interview.`
+  ];
+  const seed = Math.abs(clean.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0));
+  return `${openings[seed % openings.length]} ${clean}`;
+}
+
+function getSpeechLanguageLabel(langCode = 'en-US') {
+  const labels = {
+    'en-US': 'English',
+    'en-IN': 'English (India)',
+    'hi-IN': 'Hindi',
+    'ta-IN': 'Tamil',
+    'te-IN': 'Telugu',
+    'kn-IN': 'Kannada',
+    'ml-IN': 'Malayalam'
+  };
+  return labels[langCode] || langCode;
+}
+
+function isSpeechRecognitionContextSupported() {
+  const host = (location.hostname || '').toLowerCase();
+  const localHosts = ['localhost', '127.0.0.1', '::1', '0.0.0.0'];
+  return window.isSecureContext || (location.protocol === 'http:' && localHosts.includes(host));
+}
+
+function buildSpeechReview(text, fillerCount, avgWordsPerSentence, pace) {
+  const normalized = String(text || '').trim();
+  if (!normalized) return 'Start recording and speak for a few seconds. The coach will give you a focused speaking review here.';
+
+  const points = [];
+  if (fillerCount >= 5) points.push('reduce filler words and use a short pause before the next idea');
+  if (avgWordsPerSentence > 20) points.push('split long sentences so your answer feels easier to follow');
+  if (normalized.split(/\s+/).filter(Boolean).length < 18) points.push('add one concrete example and one measurable outcome');
+  if (pace === 'Fast') points.push('slow down slightly to sound more deliberate');
+  if (pace === 'Slow') points.push('pick up the pace a little so the answer feels more confident');
+
+  if (!points.length) {
+    return 'Strong delivery. Your answer sounds natural. Keep this structure: main point, example, impact.';
+  }
+
+  return `Improve this answer by ${points.slice(0, 2).join(' and ')}.`;
+}
+
+function refreshSpeechSupportUI() {
+  const badge = document.getElementById('speech-language-badge');
+  const supportMode = document.getElementById('speech-support-mode-view');
+  const transcriptPreview = document.getElementById('speech-transcript-preview');
+  const fillerCount = document.getElementById('speech-filler-count');
+  const fluency = document.getElementById('speech-fluency');
+  const pace = document.getElementById('speech-pace-view');
+  const confidence = document.getElementById('speech-confidence-view');
+  const review = document.getElementById('speech-review-view');
+  const note = document.getElementById('speech-coach-note');
+  const aiBubble = document.getElementById('speech-ai-bubble');
+  const userBubble = document.getElementById('speech-user-bubble');
+
+  if (badge) badge.textContent = getSpeechLanguageLabel(state.spokenLanguage);
+  if (supportMode) supportMode.textContent = state.englishSupportMode;
+  if (transcriptPreview) {
+    const liveText = [state.voiceTranscript, state.voiceInterim].filter(Boolean).join(' ').trim();
+    transcriptPreview.textContent = liveText || 'Your live transcript will appear here while you speak.';
+  }
+  if (fillerCount) {
+    const fillerWords = state.speechInsights.fillerWords || [];
+    fillerCount.textContent = fillerWords.length
+      ? `${state.speechInsights.fillerCount || 0} (${fillerWords.join(', ')})`
+      : String(state.speechInsights.fillerCount || 0);
+  }
+  if (fluency) fluency.textContent = state.speechInsights.fluency || 'Waiting';
+  if (pace) pace.textContent = state.speechInsights.pace || 'Calibrating';
+  if (confidence) confidence.textContent = state.speechInsights.confidence || 'Warming up';
+  if (review) review.textContent = state.speechInsights.review || 'Stop recording for a focused review.';
+  if (aiBubble) aiBubble.textContent = state.currentQuestionText || 'The interviewer question will appear here.';
+  if (userBubble) {
+    const spokenText = [state.voiceTranscript, state.voiceInterim].filter(Boolean).join(' ').trim();
+    userBubble.textContent = spokenText || 'Start recording and your spoken answer will appear live here.';
+  }
+  if (note) note.textContent = state.speechInsights.note || 'We\'ll help you speak more clearly, even if English is not your strongest language.';
+}
+
+function analyzeSpeechSupport(text, interimText = '') {
+  const source = `${text || ''} ${interimText || ''}`.trim();
+  const normalizedSource = source.toLowerCase().replace(/[^a-z'\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  const words = normalizedSource.split(/\s+/).filter(Boolean);
+  const singleFillers = new Set(['um', 'uh', 'umm', 'uhh', 'erm', 'hmm', 'like', 'actually', 'basically', 'literally', 'so']);
+  const phraseFillers = normalizedSource.match(/\b(you know|i mean|sort of|kind of|you see)\b/g) || [];
+  const fillerMatches = [
+    ...words.filter(word => singleFillers.has(word)),
+    ...phraseFillers,
+  ];
+  const fillerCount = fillerMatches.length;
+  const wordCount = words.length;
+  const sentenceCount = Math.max(1, source.split(/[.!?]/).filter(Boolean).length);
+  const avgWordsPerSentence = wordCount / sentenceCount;
+  const structureScore = Number(/because|therefore|result|impact|example|first|second|finally/.test(source.toLowerCase()));
+
+  let fluency = 'Getting started';
+  let pace = 'Calibrating';
+  let confidence = 'Warming up';
+  let note = state.spokenLanguage.startsWith('en')
+    ? 'Keep your answer structured: point, example, impact.'
+    : `You can speak in ${getSpeechLanguageLabel(state.spokenLanguage)}. We"ll still capture your answer and coach clarity.`;
+
+  if (wordCount > 12) {
+    fluency = fillerCount <= 2 ? 'Clear' : fillerCount <= 5 ? 'Needs smoothing' : 'Too many fillers';
+  }
+  if (wpmCount >= 150) pace = 'Fast';
+  else if (wpmCount >= 95) pace = 'Balanced';
+  else if (wordCount > 8) pace = 'Slow';
+  if (wordCount > 25 && fillerCount <= 2 && structureScore) confidence = 'Confident';
+  else if (wordCount > 14) confidence = 'Building';
+  if (avgWordsPerSentence > 20) {
+    note = 'Break long thoughts into shorter sentences so the interviewer can follow you more easily.';
+  } else if (fillerCount >= 4) {
+    note = 'Try pausing silently instead of using filler words like "um" or "like".';
+  } else if (wordCount < 12) {
+    note = 'Add one example and one result to make the answer stronger.';
+  } else if (state.type === 'Behavioral') {
+    note = 'Use Situation, Action, and Result so your story sounds polished.';
+  } else if (state.type === 'Technical' || state.type === 'Coding') {
+    note = 'Say the approach first, then explain trade-offs and complexity.';
+  }
+
+  if (state.englishSupportMode === 'Coach' && !state.spokenLanguage.startsWith('en')) {
+    note = `${note} If needed, answer naturally first and then restate the key point in English.`;
+  } else if (state.englishSupportMode === 'Minimal') {
+    note = 'Recognition is active. Focus on answering naturally.';
+  }
+
+  state.speechInsights = {
+    fillerCount,
+    fillerWords: [...new Set(fillerMatches)].slice(0, 4),
+    fluency,
+    pace,
+    confidence,
+    note,
+    review: buildSpeechReview(source, fillerCount, avgWordsPerSentence, pace),
+  };
+  refreshSpeechSupportUI();
+}
+
+function authHeaders(extra = {}) {
+  const headers = { ...extra };
+  if (state.authToken) {
+    headers.Authorization = `Bearer ${state.authToken}`;
+  }
+  return headers;
+}
+
+async function apiFetch(url, options = {}) {
+  const response = await fetch(`${API_BASE}${url}`, {
+    ...options,
+    headers: authHeaders(options.headers || {})
+  });
+  if (response.status === 401) {
+    state.authToken = '';
+    state.currentUser = null;
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    updateAuthUI();
+  }
+  return response;
+}
+
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function toggleCopilot(forceOpen) {
+  state.copilotOpen = typeof forceOpen === 'boolean' ? forceOpen : !state.copilotOpen;
+  const panel = document.getElementById('copilot-panel');
+  const pulse = document.getElementById('copilot-pulse');
+  if (panel) panel.classList.toggle('open', state.copilotOpen);
+  if (pulse) pulse.textContent = state.copilotOpen ? 'Live' : 'Ask';
+  if (state.copilotOpen) {
+    setTimeout(() => document.getElementById('copilot-input')?.focus(), 80);
+  }
+}
+
+function appendCopilotMessage(kind, message) {
+  const list = document.getElementById('copilot-messages');
+  if (!list) return;
+  const item = document.createElement('div');
+  item.className = `copilot-msg ${kind}`;
+  item.innerHTML = escapeHtml(message);
+  list.appendChild(item);
+  list.scrollTop = list.scrollHeight;
+}
+
+function handleCopilotKey(event) {
+  if (event.key === 'Enter') sendCopilotMessage();
+}
+
+async function sendCopilotMessage() {
+  const input = document.getElementById('copilot-input');
+  const message = String(input?.value || '').trim();
+  if (!message) return;
+  if (input) input.value = '';
+  appendCopilotMessage('user', message);
+
+  if (!state.authToken) {
+    appendCopilotMessage('bot', 'Please sign in first so I can use your interview context.');
+    return;
+  }
+
+  appendCopilotMessage('bot thinking', 'Thinking...');
+  try {
+    const response = await apiFetch('/assistant/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, sessionId: state.sessionId || '' })
+    });
+    const data = await response.json();
+    document.querySelector('#copilot-messages .thinking:last-child')?.remove();
+    if (!response.ok) throw new Error(data.error || 'Copilot is unavailable.');
+    appendCopilotMessage('bot', data.reply || 'Try giving one specific answer and I will help tighten it.');
+  } catch (err) {
+    document.querySelector('#copilot-messages .thinking:last-child')?.remove();
+    appendCopilotMessage('bot', err.message || 'Copilot is unavailable right now.');
+  }
+}
+
+function switchAuthMode(mode) {
+  state.authMode = mode === 'register' ? 'register' : 'login';
+  document.getElementById('auth-tab-login').classList.toggle('active', state.authMode === 'login');
+  document.getElementById('auth-tab-register').classList.toggle('active', state.authMode === 'register');
+  document.getElementById('auth-name-field').style.display = state.authMode === 'register' ? 'block' : 'none';
+  document.getElementById('auth-role-field').style.display = state.authMode === 'register' ? 'block' : 'none';
+  document.getElementById('auth-status').textContent = state.authMode === 'register'
+    ? 'Create an account to unlock persistent interviews, recordings, and analytics.'
+    : 'Use your saved account to access your interview history and reports.';
+}
+
+function updateAuthUI() {
+  const chip = document.getElementById('auth-user-chip');
+  const entryBtn = document.getElementById('auth-entry-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  const adminBtn = document.getElementById('admin-entry-btn');
+  const user = state.currentUser;
+
+  if (chip) chip.textContent = user ? `${user.fullName}  ${user.role}` : 'Guest mode';
+  if (entryBtn) entryBtn.style.display = user ? 'none' : 'inline-flex';
+  if (logoutBtn) logoutBtn.style.display = user ? 'inline-flex' : 'none';
+  if (adminBtn) adminBtn.style.display = user?.role === 'admin' ? 'inline-flex' : 'none';
+}
+
+async function loadCurrentUser() {
+  if (!state.authToken) {
+    state.currentUser = null;
+    updateAuthUI();
+    return;
+  }
+  try {
+    const response = await apiFetch('/auth/me');
+    if (!response.ok) throw new Error('Could not validate account session.');
+    const data = await response.json();
+    state.currentUser = data.user || null;
+  } catch (err) {
+    console.error('AUTH ME ERROR:', err);
+    state.authToken = '';
+    state.currentUser = null;
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+  } finally {
+    updateAuthUI();
+  }
+}
+
+async function submitAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const fullName = document.getElementById('auth-full-name').value.trim();
+  const role = document.getElementById('auth-role').value;
+  const status = document.getElementById('auth-status');
+
+  if (!email || !password || (state.authMode === 'register' && !fullName)) {
+    status.textContent = 'Please complete the required fields.';
+    return;
+  }
+
+  status.textContent = state.authMode === 'register' ? 'Creating your account...' : 'Signing you in...';
+
+  try {
+    const response = await fetch(`${API_BASE}/auth/${state.authMode}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, fullName, role })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Authentication failed.');
+    }
+    state.authToken = data.token || '';
+    state.currentUser = data.user || null;
+    localStorage.setItem(AUTH_STORAGE_KEY, state.authToken);
+    updateAuthUI();
+    status.textContent = 'Account ready. Redirecting you to setup...';
+    showScreen(state.currentUser?.role === 'admin' ? 'admin' : 'setup');
+  } catch (err) {
+    console.error('AUTH SUBMIT ERROR:', err);
+    status.textContent = err.message || 'Authentication failed.';
+  }
+}
+
+async function logoutUser() {
+  try {
+    if (state.authToken) {
+      await apiFetch('/auth/logout', { method: 'POST' });
+    }
+  } catch (err) {
+    console.error('LOGOUT ERROR:', err);
+  }
+  state.authToken = '';
+  state.currentUser = null;
+  localStorage.removeItem(AUTH_STORAGE_KEY);
+  updateAuthUI();
+  showScreen('landing');
+}
+
+function normalizeMediaUrl(url) {
+  if (!url) return '';
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith('/')) return `${API_BASE}${url}`;
+  return url;
+}
+
+async function fetchServerHistory(limit = 12) {
+  const response = await apiFetch(`/history?limit=${limit}`);
+  if (!response.ok) throw new Error('Could not load interview history.');
+  const data = await response.json();
+  return Array.isArray(data.sessions) ? data.sessions : [];
+}
+
+function getInterviewStatusLabel() {
+  const answered = state.answers.filter(answer => answer && answer !== '[Skipped]' && answer !== '[Timed out]').length;
+  if (answered === 0) return 'Not answered';
+  if (answered < state.maxQuestions) return 'Partially completed';
+  return 'Completed';
+}
+
+function getInterviewDurationLabel() {
+  if (!state.sessionStartedAt) return 'Under 1 min';
+  const elapsedSeconds = Math.max(1, Math.round((Date.now() - state.sessionStartedAt) / 1000));
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
+  if (minutes <= 0) return `${seconds}s`;
+  return `${minutes}m ${String(seconds).padStart(2, '0')}s`;
+}
+
+function buildSessionSummary() {
+  const qs = state.questions.length ? state.questions : QUESTIONS['Mixed'].slice(0, 8);
+  const backendReport = state.latestReport;
+  const fallbackScores = [72, 88, 65, 91, 78, 84, 60, 87];
+  const overall = backendReport?.overallScore
+    ?? Math.round(fallbackScores.slice(0, qs.length).reduce((a, b) => a + b, 0) / qs.length);
+  return {
+    overall,
+    answeredCount: backendReport?.answeredCount ?? state.answers.filter(Boolean).length,
+    questionCount: backendReport?.questionCount ?? Math.max(qs.length, state.maxQuestions || 0),
+    status: state.interviewEndReason === 'stopped' ? 'Stopped early' : getInterviewStatusLabel()
+  };
+}
+
+function saveInterviewSession(recordingDataUrl = '', recordingObjectUrl = '') {
+  if (!state.role && !state.company && !state.questions.length) return;
+  const summary = buildSessionSummary();
+  state.latestOverallScore = summary.overall;
+  state.latestRecordingDataUrl = recordingDataUrl || state.latestRecordingDataUrl || '';
+  state.latestRecordingUrl = recordingObjectUrl || state.latestRecordingUrl || '';
+
+  const history = getInterviewHistory();
+  history.unshift({
+    id: `${Date.now()}`,
+    savedAt: new Date().toLocaleString(),
+    role: state.role || 'Interview',
+    company: state.company || 'General',
+    type: state.type || 'Mixed',
+    difficulty: state.difficulty || 'medium',
+    status: summary.status,
+    score: summary.overall,
+    answeredCount: summary.answeredCount,
+    questionCount: summary.questionCount,
+    durationLabel: getInterviewDurationLabel(),
+    recordingDataUrl: state.latestRecordingDataUrl || '',
+    questions: (state.questions || []).map((q, index) => ({
+      question: q?.q || '',
+      answer: state.answers[index] || ''
+    }))
+  });
+  setInterviewHistory(history.slice(0, 12));
+}
+
+async function buildHistoryScreen() {
+  const historyList = document.getElementById('history-list');
+  if (!historyList) return;
+
+  historyList.innerHTML = `
+    <div class="history-empty">
+      <div class="rec-icon">...</div>
+      <h3>Loading previous interviews</h3>
+      <p>Fetching saved interview reports from your product database.</p>
+    </div>
+  `;
+
+  let history = [];
+  try {
+    history = await fetchServerHistory();
+  } catch (err) {
+    console.error('SERVER HISTORY ERROR:', err);
+    history = getInterviewHistory();
+  }
+
+  if (!history.length) {
+    historyList.innerHTML = `
+      <div class="history-empty">
+        <div class="rec-icon">History</div>
+        <h3>No previous interviews yet</h3>
+        <p>Start a mock interview and your completed sessions will appear here with status and recording.</p>
+      </div>
+    `;
+    return;
+  }
+
+  historyList.innerHTML = history.map(session => `
+    <article class="history-card">
+      <div class="history-card-top">
+        <div>
+          <div class="history-role">${session.role}</div>
+          <div class="history-company">${session.company}  ${session.type}</div>
+        </div>
+        <div class="history-score">${session.score}/100</div>
+      </div>
+      <div class="history-meta-row">
+        <span class="history-pill">${session.status}</span>
+        <span class="history-meta">${session.difficulty}</span>
+        <span class="history-meta">${session.answeredCount}/${session.questionCount} answered</span>
+      </div>
+      <div class="history-date">${session.savedAt}</div>
+      ${session.hiringVerdict ? `<div class="history-verdict">${session.hiringVerdict}</div>` : ''}
+      <div class="history-recording">
+        ${(session.recordingUrl || session.recordingDataUrl)
+          ? `<video controls preload="metadata" src="${normalizeMediaUrl(session.recordingUrl || session.recordingDataUrl)}"></video>`
+          : `<div class="history-no-video">Recording unavailable for this session</div>`}
+      </div>
+      ${session.coachNote ? `<div class="history-note">${session.coachNote}</div>` : ''}
+    </article>
+  `).join('');
+}
+
+async function clearInterviewHistory() {
+  try {
+    await apiFetch('/history', { method: 'DELETE' });
+  } catch (err) {
+    console.error('CLEAR SERVER HISTORY ERROR:', err);
+  }
+  localStorage.removeItem(INTERVIEW_HISTORY_KEY);
+  buildHistoryScreen();
+}
+
+function buildResumeContext() {
+  if (!state.resumeText) return '';
+  return state.resumeText.replace(/\s+/g, ' ').trim().slice(0, 3500);
+}
+
+async function handleResumeUpload(event) {
+  const file = event.target.files?.[0];
+  const meta = document.getElementById('resume-upload-meta');
+  const preview = document.getElementById('resume-preview');
+
+  state.resumeText = '';
+  state.resumeFileName = '';
+  if (preview) {
+    preview.textContent = '';
+    preview.classList.add('hidden');
+  }
+
+  if (!file) {
+    if (meta) meta.textContent = 'Upload a PDF or TXT resume so the interviewer can ask resume-based questions too.';
+    return;
+  }
+
+  state.resumeParsing = true;
+  state.resumeFileName = file.name;
+  if (meta) meta.textContent = `Reading ${file.name}...`;
+
+  try {
+    let extractedText = '';
+    const lowerName = file.name.toLowerCase();
+
+    if (lowerName.endsWith('.txt')) {
+      extractedText = await file.text();
+    } else if (lowerName.endsWith('.pdf')) {
+      extractedText = await extractPdfText(file);
+    } else {
+      throw new Error('Please upload a PDF or TXT resume.');
+    }
+
+    const cleaned = extractedText.replace(/\s+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+    if (!cleaned) throw new Error('Could not read text from this resume.');
+
+    state.resumeText = cleaned;
+    if (meta) meta.textContent = `${file.name} loaded. The AI can now use your resume as interview context.`;
+    if (preview) {
+      preview.textContent = cleaned.slice(0, 600) + (cleaned.length > 600 ? '...' : '');
+      preview.classList.remove('hidden');
+    }
+  } catch (err) {
+    console.error('RESUME UPLOAD ERROR:', err);
+    state.resumeText = '';
+    state.resumeFileName = '';
+    if (meta) meta.textContent = err.message || 'Could not process the uploaded resume.';
+  } finally {
+    state.resumeParsing = false;
+  }
+}
+
+async function extractPdfText(file) {
+  if (!window.pdfjsLib) {
+    throw new Error('PDF reader is unavailable. Refresh the page and try again.');
+  }
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const buffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+  const pages = [];
+
+  for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+    const page = await pdf.getPage(pageNumber);
+    const textContent = await page.getTextContent();
+    pages.push(textContent.items.map(item => item.str).join(' '));
+  }
+
+  return pages.join('\n');
+}
+
+let selectedType = 'Technical';
+let selectedDiff = 'medium';
+
+function toggleCustomField(selectId, wrapperId) {
+  const select = document.getElementById(selectId);
+  const wrapper = document.getElementById(wrapperId);
+  if (!select || !wrapper) return;
+  wrapper.classList.toggle('hidden', select.value !== 'Other');
+}
+
+function selectType(el, type) {
+  document.querySelectorAll('.type-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedType = type;
+}
+
+function selectDiff(el, diff) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedDiff = diff;
+}
+/*function startInterview() {
+  state.role = document.getElementById('target-role').value || 'Software Engineer';
+  state.type = selectedType;
+  state.difficulty = selectedDiff;
+
+  const count = parseInt(document.getElementById('duration-select').value);
+  const pool = QUESTIONS[state.type] || QUESTIONS['Mixed'];
+  state.questions = pool.slice(0, Math.min(count, pool.length));
+
+  state.currentQ = 0;
+  state.answers = new Array(state.questions.length).fill('')
+   document.getElementById('meta-role').textContent = state.role;
+   document.getElementById('meta-type').textContent = state.type;
+   document.getElementById('meta-diff').textContent = state.difficulty;
+
+  loadQuestion(0);  
+  startTimer();
+  setupEmotionPanel();
+  requestCamera();
+
+  showScreen('interview'); 
+}*/
+
+async function startInterview() {
+  if (state.resumeParsing) {
+    const meta = document.getElementById('resume-upload-meta');
+    if (meta) meta.textContent = 'Your resume is still being processed. Please wait a moment and try again.';
+    return;
+  }
+  const selectedRole = document.getElementById('target-role').value;
+  const customRole = document.getElementById('custom-role').value.trim();
+  const selectedCompany = document.getElementById('target-company').value;
+  const customCompany = document.getElementById('custom-company').value.trim();
+  state.role = (selectedRole === 'Other' ? customRole : selectedRole).trim() || 'Software Engineer';
+  state.company = (selectedCompany === 'Other' ? customCompany : selectedCompany).trim();
+  state.type = selectedType;
+  state.difficulty = selectedDiff;
+  state.skills = document.getElementById('skills-input').value.trim();
+  state.experienceLevel = document.getElementById('experience-level').value;
+  state.focusArea = document.getElementById('focus-area').value;
+  state.preferredLanguage = document.getElementById('preferred-language').value;
+  state.answerMode = document.getElementById('answer-mode').value;
+  state.spokenLanguage = document.getElementById('spoken-language').value;
+  state.englishSupportMode = document.getElementById('english-support-mode').value;
+  state.maxQuestions = parseInt(document.getElementById('duration-select').value, 10) || 5;
+  state.questions = [];
+  state.answers = new Array(state.maxQuestions).fill('');
+  state.currentQ = -1;
+  state.currentQuestionText = '';
+  state.voiceTranscript = '';
+  state.voiceInterim = '';
+  state.voiceStartedAt = null;
+  state.voiceShouldContinue = false;
+  state.voiceStopRequested = false;
+  state.voiceTranscriptionPending = false;
+  state.lastServerTranscript = '';
+  clearTimeout(state.voiceRestartTimer);
+  state.speechInsights = {
+    fillerCount: 0,
+    fillerWords: [],
+    fluency: 'Waiting',
+    pace: 'Calibrating',
+    confidence: 'Warming up',
+    note: 'We\'ll help you speak more clearly, even if English is not your strongest language.',
+    review: 'Stop recording to get a targeted speaking review.'
+  };
+  state.sessionId = '';
+  state.latestReport = null;
+  state.timerSecs = 0;
+  state.timerHandlingExpiry = false;
+  state.latestRecordingUrl = '';
+  state.latestRecordingDataUrl = '';
+  state.latestOverallScore = 0;
+  state.interviewActive = true;
+  state.interviewEndReason = 'completed';
+  state.sessionStartedAt = Date.now();
+  state.resumeFileName = state.resumeFileName || '';
+  chooseInterviewerPersona();
+  const enrichedSkills = [
+    state.skills,
+    `Experience: ${state.experienceLevel}`,
+    `Focus: ${state.focusArea}`,
+    `Preferred coding language: ${state.preferredLanguage}`,
+    `Answer mode: ${state.answerMode}`
+  ].filter(Boolean).join(', ');
+  const resumeContext = buildResumeContext();
+
+  document.getElementById('meta-role').textContent = state.role;
+  document.getElementById('meta-type').textContent = state.type;
+  document.getElementById('meta-diff').textContent = state.difficulty;
+  document.getElementById('answer-text-area').value = '';
+  document.getElementById('lang-select').value = state.preferredLanguage.toLowerCase() === 'c++' ? 'cpp' : state.preferredLanguage.toLowerCase();
+  state.currentCodingTopic = null;
+  setCodeEditorTemplate();
+  document.getElementById('voice-helper').textContent = state.answerMode === 'Voice Preferred'
+    ? 'Voice preferred mode is active. Use Record Voice and your transcript will be added automatically.'
+    : 'You can type, speak, or combine both. Spoken transcript will be added to your answer.';
+  refreshSpeechSupportUI();
+
+  updateQuestionUI({
+    question: 'Preparing your interview...',
+    questionNumber: 0,
+    totalQuestions: state.maxQuestions,
+  });
+  setAIStatus('Preparing interview...');
+  showScreen('interview');
+  resetQuestionTimer(state.questionTimeLimitSecs);
+  setupEmotionPanel();
+  requestCamera().catch(err => console.error('CAMERA INIT ERROR:', err));
+  startRecording().catch(err => console.error('RECORD INIT ERROR:', err));
+
+  try {
+    const response = await apiFetch('/start', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        role: state.role,
+        company: state.company,
+        type: state.type,
+        level: state.difficulty,
+        skills: enrichedSkills,
+        totalQuestions: state.maxQuestions,
+        focusArea: state.focusArea,
+        experienceLevel: state.experienceLevel,
+        preferredLanguage: state.preferredLanguage,
+        answerMode: state.answerMode,
+        resumeText: state.resumeText,
+        resumeFileName: state.resumeFileName,
+        candidateContext: resumeContext
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Unable to start interview session.');
+    }
+
+    const data = await response.json();
+    state.sessionId = data.sessionId || '';
+    state.maxQuestions = data.totalQuestions || state.maxQuestions;
+
+    await askAIQuestion();
+  } catch (err) {
+    console.error('START ERROR:', err);
+    setAIStatus('Could not start interview.');
+    updateQuestionUI({
+      question: 'Could not start the interview. Please make sure the backend server is running on port 5000.',
+      questionNumber: 0,
+      totalQuestions: state.maxQuestions,
+    });
+  }
+}
+async function askAIQuestion() {
+  if (state.busy || !state.interviewActive) return;
+  if (state.questions.length >= state.maxQuestions) {
+    finishInterview();
+    return;
+  }
+
+  setInterviewBusy(true, 'Interviewer is thinking...');
+
+  try {
+    const res = await apiFetch('/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sessionId: state.sessionId
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch next question.');
+    }
+
+    const data = await res.json();
+
+    if (data.done) {
+      finishInterview();
+      return;
+    }
+    if (!state.interviewActive) return;
+
+    const question = data.question || 'Tell me about yourself.';
+    const questionNumber = data.questionNumber || (state.questions.length + 1);
+    const tags = getQuestionTag(state.type);
+    const tips = getInterviewTips(tags);
+
+    state.voiceTranscript = '';
+    state.voiceInterim = '';
+    state.voiceStartedAt = null;
+    state.lastServerTranscript = '';
+    state.speechInsights = {
+      fillerCount: 0,
+      fillerWords: [],
+      fluency: 'Waiting',
+      pace: 'Calibrating',
+      confidence: 'Warming up',
+      note: 'Speak naturally. The coach will watch clarity, fillers, and answer structure.',
+      review: 'Stop recording to get a focused speaking review for this answer.'
+    };
+    refreshSpeechSupportUI();
+
+    state.currentQ = questionNumber - 1;
+    state.currentQuestionText = question;
+    state.questions[state.currentQ] = { q: question, tags, tips };
+    refreshSpeechSupportUI();
+
+    updateQuestionUI({
+      question,
+      questionNumber,
+      totalQuestions: data.totalQuestions || state.maxQuestions,
+      tags,
+      tips,
+    });
+    resetQuestionTimer(state.questionTimeLimitSecs);
+
+    setAIStatus('Speaking...');
+    speak(question, () => setAIStatus('Listening...'));
+    document.getElementById('answer-text-area').value = state.answers[state.currentQ] || '';
+  } catch (err) {
+    console.error('ASK ERROR:', err);
+    setAIStatus('Unable to ask question.');
+    updateQuestionUI({
+      question: 'The interviewer could not load the next question. Please try again.',
+      questionNumber: Math.max(state.currentQ + 1, 1),
+      totalQuestions: state.maxQuestions,
+    });
+  } finally {
+    setInterviewBusy(false);
+  }
+}
+
+  //speak(data.question); // x} AI speaks
+
+function repeatCurrentQuestion() {
+  if (!state.currentQuestionText) return;
+  setAIStatus('Repeating question...');
+  speak(state.currentQuestionText, () => setAIStatus('Listening...'));
+}
+
+function setInterviewBusy(isBusy, statusText = '') {
+  state.busy = isBusy;
+  const submitBtn = document.querySelector('.btn-next');
+  const skipBtn = document.getElementById('skip-btn');
+  if (submitBtn) submitBtn.disabled = isBusy;
+  if (skipBtn) skipBtn.disabled = isBusy;
+  if (statusText) setAIStatus(statusText);
+}
+
+function setAIStatus(text) {
+  const statusEl = document.getElementById('ai-status');
+  if (statusEl) statusEl.textContent = text;
+}
+
+function getQuestionTag(type) {
+  if (!type) return 'technical';
+  if (type === 'System Design') return 'technical';
+  return type.toLowerCase();
+}
+
+function getInterviewTips(tag) {
+  const tipsByTag = {
+    technical: ['Explain your reasoning clearly', 'Use an example if it helps', 'Mention trade-offs when relevant'],
+    behavioral: ['Use the STAR format', 'Be specific about your role', 'End with the result or lesson'],
+    hr: ['Keep the answer concise', 'Connect your story to the role', 'Show genuine motivation'],
+    coding: ['Explain the brute-force approach first', 'Then optimize step by step', 'Call out time and space complexity'],
+  };
+  return tipsByTag[tag] || tipsByTag.technical;
+}
+
+function updateQuestionUI({ question, questionNumber, totalQuestions, tags = getQuestionTag(state.type), tips = [] }) {
+  const safeQuestionNumber = Math.max(questionNumber || 0, 0);
+  const total = Math.max(totalQuestions || state.maxQuestions || 0, 1);
+  const questionEl = document.getElementById('question-text');
+  const qNumEl = document.getElementById('q-num-label');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  const tipsList = document.getElementById('tips-list');
+  const tagEl = document.getElementById('q-tag');
+
+  if (questionEl) questionEl.textContent = question;
+  if (qNumEl) qNumEl.textContent = safeQuestionNumber > 0 ? `Question ${safeQuestionNumber}` : 'Interview';
+  if (progressFill) progressFill.style.width = `${(safeQuestionNumber / total) * 100}%`;
+  if (progressText) progressText.textContent = `${safeQuestionNumber} / ${total}`;
+  if (tagEl) {
+    tagEl.textContent = tags.charAt(0).toUpperCase() + tags.slice(1);
+    tagEl.className = `q-tag ${tags}`;
+  }
+  if (tipsList) {
+    tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+  }
+
+  const codingQuestion = isCodingQuestion(question, tags);
+  const rightPanel = document.querySelector('.right-panel');
+
+  if (codingQuestion) {
+    document.getElementById('coding-panel').classList.add('active');
+    if (rightPanel) rightPanel.classList.add('coding-mode');
+    state.currentCodingTopic = detectCodingTopic(question);
+    setCodeEditorTemplate(question, true);
+  } else {
+    document.getElementById('coding-panel').classList.remove('active');
+    if (rightPanel) rightPanel.classList.remove('coding-mode');
+    state.currentCodingTopic = null;
+    setCodeEditorTemplate();
+  }
+}
+
+function isCodingQuestion(question, tags) {
+  if (tags === 'coding' || state.type === 'Coding') return true;
+  const codingPatterns = [
+    /write\s+(a|an|the)?\s*(function|program|method)/i,
+    /implement/i,
+    /solve\s+(this|the)\s+(problem|question)/i,
+    /time complexity/i,
+    /space complexity/i,
+    /linked list|binary tree|substring|array|hash map/i,
+    /code editor/i,
+    /algorithm/i,
+  ];
+  return codingPatterns.some(pattern => pattern.test(question || ''));
+}
+
+function detectCodingTopic(question) {
+  const text = (question || '').toLowerCase();
+  if (/linked list|listnode|reverse list|merge list/.test(text)) return 'linked_list';
+  if (/binary tree|tree|graph|bfs|dfs|traversal|node/.test(text)) return 'tree_graph';
+  if (/dynamic programming|dp|memoization|knapsack|subsequence|coin change/.test(text)) return 'dynamic_programming';
+  if (/string|substring|palindrome|anagram|character/.test(text)) return 'string_problem';
+  if (/array|hash map|hash table|two sum|prefix sum|sliding window/.test(text)) return 'array_hashmap';
+  return 'generic';
+}
+
+function getEditorLanguage() {
+  return document.getElementById('lang-select').value;
+}
+
+function getBasicEditorTemplate(lang) {
+  return BASIC_EDITOR_TEMPLATES[lang] || BASIC_EDITOR_TEMPLATES.python;
+}
+
+function getQuestionSpecificTemplate(lang, topic) {
+  const templateGroup = CODING_TEMPLATES[topic] || CODING_TEMPLATES.generic;
+  return templateGroup[lang] || CODING_TEMPLATES.generic[lang] || getBasicEditorTemplate(lang);
+}
+
+function setCodeEditorTemplate(question = '', forceReplace = false) {
+  const editor = document.getElementById('code-editor');
+  if (!editor) return;
+
+  const lang = getEditorLanguage();
+  const nextTemplate = state.currentCodingTopic
+    ? getQuestionSpecificTemplate(lang, state.currentCodingTopic)
+    : getBasicEditorTemplate(lang);
+
+  if (forceReplace || !editor.value.trim()) {
+    editor.value = nextTemplate;
+  }
+}
+
+function speak(text, onEnd) {
+  const speech = new SpeechSynthesisUtterance(humanizeQuestionForSpeech(text));
+  speech.rate = 0.92;
+  speech.pitch = 0.96;
+  speech.volume = 1;
+  speech.lang = 'en-US';
+  speech.onend = () => {
+    if (typeof onEnd === 'function') onEnd();
+  };
+  speech.onerror = () => {
+    if (typeof onEnd === 'function') onEnd();
+  };
+
+  speechSynthesis.cancel();
+  primeSpeechVoices();
+  speech.voice = state.preferredSpeechVoice;
+  speechSynthesis.resume();
+  speechSynthesis.speak(speech);
+}
+
+/*function buildSidebIrList() {
+  const list = document.getElementById('q-list');
+  list.innerHTML = '';
+  state.questions.forEach((q, i) => {
+    const el = document.createElement('div');
+    el.className = 'q-item' + (i === 0 ? ' current' : '');
+    el.id = 'qi-' + i;
+    el.onclick = () => loadQuestion(i);
+    el.innerHTML = `<div class="q-num">${i+1}</div><div class="q-text">${q.q.substring(0,50)}&</div>`;
+    list.appendChild(el);
+  });
+}*/
+
+/*function loadQuestion(idx) {
+  state.currentQ = idx;
+  const q = state.questions[idx];*/
+async function submitAnswer() {
+  if (state.busy || state.currentQ < 0 || !state.interviewActive) return;
+  if (state.recording) {
+    stopVoiceCapture();
+    await new Promise(resolve => setTimeout(resolve, 250));
+  }
+
+  const answerBox = document.getElementById('answer-text-area');
+  let answer = answerBox.value.trim();
+  if (!answer) {
+    await tryServerVoiceTranscription();
+    answer = answerBox.value.trim();
+  }
+  if (!answer) {
+    const helper = document.getElementById('voice-helper');
+    if (helper) helper.textContent = 'No answer detected yet. Speak and stop recording once, or type your answer.';
+    setAIStatus('Waiting for your answer...');
+    return;
+  }
+
+  state.answers[state.currentQ] = answer;
+  await sendAnswerToServer(answer, false);
+
+  if (state.currentQ >= state.maxQuestions - 1) {
+    finishInterview();
+    return;
+  }
+
+  document.getElementById('answer-text-area').value = '';
+  await askAIQuestion();
+}
+
+async function nextQuestion() {
+  if (state.busy || state.currentQ < 0 || !state.interviewActive) return;
+  if (state.recording) {
+    stopVoiceCapture();
+    await new Promise(resolve => setTimeout(resolve, 250));
+  }
+
+  state.answers[state.currentQ] = '[Skipped]';
+  await sendAnswerToServer('', true);
+
+  if (state.currentQ >= state.maxQuestions - 1) {
+    finishInterview();
+    return;
+  }
+
+  document.getElementById('answer-text-area').value = '';
+  await askAIQuestion();
+}
+
+async function sendAnswerToServer(answer, skipped) {
+  setInterviewBusy(true, skipped ? 'Skipping question...' : 'Reviewing your answer...');
+
+  try {
+    const response = await apiFetch('/answer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sessionId: state.sessionId,
+        answer,
+        skipped,
+        questionNumber: state.currentQ + 1
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send answer to interviewer.');
+    }
+
+    const data = await response.json();
+    if (data?.evaluation) {
+      state.questions[state.currentQ] = {
+        ...(state.questions[state.currentQ] || {}),
+        evaluation: data.evaluation
+      };
+    }
+  } catch (err) {
+    console.error('ANSWER ERROR:', err);
+    setAIStatus('Could not save answer.');
+    throw err;
+  } finally {
+    setInterviewBusy(false);
+  }
+}
+
+async function finishInterview() {
+  if (state.isFinishingInterview) return;
+  state.isFinishingInterview = true;
+  try {
+    state.interviewActive = false;
+    state.busy = false;
+    clearInterval(state.timerInterval);
+    clearInterval(state.emotionInterval);
+    state.timerHandlingExpiry = false;
+    speechSynthesis.cancel();
+    if (state.recording) {
+      stopVoiceCapture();
+    }
+    showScreen('feedback');
+    buildFeedback();
+    let recordingResult = null;
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      recordingResult = await stopRecording();
+    }
+    if (state.sessionId) {
+      const emailDeliveryStatus = document.getElementById('email-delivery-status');
+      if (emailDeliveryStatus) {
+        emailDeliveryStatus.textContent = `Generating report and sending it to ${state.currentUser?.email || 'your registered email'} through n8n...`;
+      }
+      const response = await apiFetch('/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sessionId: state.sessionId,
+          status: state.interviewEndReason,
+          recordingDataUrl: recordingResult?.dataUrl || state.latestRecordingDataUrl || ''
+        })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        state.latestReport = data.report || null;
+        state.latestOverallScore = data.report?.overallScore || state.latestOverallScore;
+        state.latestRecordingUrl = normalizeMediaUrl(data.recordingUrl || '');
+      }
+    }
+    if (recordingResult) {
+      saveInterviewSession(recordingResult.dataUrl, recordingResult.objectUrl);
+    } else {
+      saveInterviewSession();
+    }
+    showScreen('feedback');
+    buildFeedback();
+  } catch (err) {
+    console.error('REPORT ERROR:', err);
+    saveInterviewSession();
+    showScreen('feedback');
+    buildFeedback();
+  } finally {
+    state.isFinishingInterview = false;
+  }
+}
+
+async function loadAdminDashboard() {
+  const summary = document.getElementById('admin-summary');
+  const rows = document.getElementById('admin-session-rows');
+  if (!summary || !rows) return;
+
+  summary.innerHTML = '<div class="history-empty"><div class="rec-icon">...</div><h3>Loading dashboard</h3><p>Collecting product analytics and recent interview activity.</p></div>';
+  rows.innerHTML = '';
+
+  try {
+    const response = await apiFetch('/admin/dashboard');
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Could not load admin dashboard.');
+
+    const roleMix = (data.summary.roleMix || []).map(item => `
+      <div class="score-card">
+        <div class="score-card-label">${item.role}</div>
+        <div class="score-card-val" style="color:var(--accent2)">${item.count}</div>
+        <div class="score-card-sub">registered accounts</div>
+      </div>
+    `).join('');
+
+    summary.innerHTML = `
+      <div class="score-cards">
+        <div class="score-card">
+          <div class="score-card-label">Users</div>
+          <div class="score-card-val" style="color:var(--green)">${data.summary.totalUsers}</div>
+          <div class="score-card-sub">platform accounts</div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-label">Sessions</div>
+          <div class="score-card-val" style="color:var(--blue)">${data.summary.totalSessions}</div>
+          <div class="score-card-sub">all interview runs</div>
+        </div>
+        <div class="score-card">
+          <div class="score-card-label">Completed</div>
+          <div class="score-card-val" style="color:var(--amber)">${data.summary.completedSessions}</div>
+          <div class="score-card-sub">finished interviews</div>
+        </div>
+        ${roleMix}
+      </div>
+    `;
+
+    rows.innerHTML = (data.recentSessions || []).map(item => `
+      <tr>
+        <td>
+          <div>${item.candidate}</div>
+          <div class="history-meta">${item.email || ''}</div>
+        </td>
+        <td>${item.role || 'Interview'}  ${item.type || 'Mixed'}  ${item.company || 'General'}</td>
+        <td>${item.status}</td>
+        <td>${item.score || 0}/100</td>
+        <td>${new Date(item.updatedAt).toLocaleString()}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('ADMIN DASHBOARD ERROR:', err);
+    summary.innerHTML = `<div class="history-empty"><div class="rec-icon">Warning</div><h3>Dashboard unavailable</h3><p>${err.message || 'Could not load admin dashboard.'}</p></div>`;
+  }
+}
+
+async function stopInterview() {
+  if (state.isFinishingInterview) return;
+  state.interviewEndReason = 'stopped';
+  state.interviewActive = false;
+  setAIStatus('Interview stopped.');
+  setInterviewBusy(false);
+  await finishInterview();
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timer');
+  if (!el) return;
+  const safeSecs = Math.max(0, state.timerSecs);
+  const m = Math.floor(safeSecs / 60);
+  const s = safeSecs % 60;
+  el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  el.className = 'timer-val';
+  if (safeSecs > 0 && safeSecs <= 120) el.classList.add('warning');
+  if (safeSecs > 0 && safeSecs <= 30) el.classList.add('danger');
+}
+
+function resetQuestionTimer(seconds = state.questionTimeLimitSecs) {
+  state.timerSecs = seconds;
+  state.timerHandlingExpiry = false;
+  updateTimerDisplay();
+  startTimer();
+}
+
+async function handleQuestionTimeout() {
+  if (state.timerHandlingExpiry || state.busy || state.currentQ < 0) return;
+  state.timerHandlingExpiry = true;
+  setAIStatus('Time is up. Moving to the next question...');
+
+  try {
+    state.answers[state.currentQ] = '[Timed out]';
+    await sendAnswerToServer('', true);
+    if (state.currentQ >= state.maxQuestions - 1) {
+      finishInterview();
+      return;
+    }
+    document.getElementById('answer-text-area').value = '';
+    await askAIQuestion();
+  } catch (err) {
+    console.error('TIMER EXPIRY ERROR:', err);
+    setAIStatus('Could not advance after timeout.');
+  } finally {
+    state.timerHandlingExpiry = false;
+  }
+}
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.timerSecs--;
+    updateTimerDisplay();
+    if (state.timerSecs <= 0) {
+      clearInterval(state.timerInterval);
+      state.timerSecs = 0;
+      updateTimerDisplay();
+      handleQuestionTimeout();
+    }
+  }, 1000);
+}
+
+function switchAnswerTab(id, btn) {
+  document.querySelectorAll('.answer-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.answer-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pane-' + id).classList.add('active');
+}
+
+let wpmCount = 0;
+
+function mergeTranscriptChunk(existingText, chunkText) {
+  const existing = String(existingText || '').trim();
+  const chunk = String(chunkText || '').trim();
+  if (!chunk) return existing;
+  if (!existing) return chunk;
+  if (existing.toLowerCase().endsWith(chunk.toLowerCase())) return existing;
+
+  const existingWords = existing.split(/\s+/);
+  const chunkWords = chunk.split(/\s+/);
+  const maxOverlap = Math.min(existingWords.length, chunkWords.length, 12);
+
+  for (let overlap = maxOverlap; overlap >= 1; overlap -= 1) {
+    const existingTail = existingWords.slice(-overlap).join(' ').toLowerCase();
+    const chunkHead = chunkWords.slice(0, overlap).join(' ').toLowerCase();
+    if (existingTail === chunkHead) {
+      return `${existingWords.join(' ')} ${chunkWords.slice(overlap).join(' ')}`.replace(/\s+/g, ' ').trim();
+    }
+  }
+
+  return `${existing} ${chunk}`.replace(/\s+/g, ' ').trim();
+}
+
+async function sendAudioDataUrlForTranscription(audioDataUrl, helperMessage = 'Processing live speech...') {
+  if (!state.sessionId || state.voiceTranscriptionPending) return '';
+
+  state.voiceTranscriptionPending = true;
+  const helper = document.getElementById('voice-helper');
+  if (helper && helperMessage) helper.textContent = helperMessage;
+
+  try {
+    const response = await apiFetch('/transcribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: state.sessionId,
+        audioDataUrl,
+        language: state.spokenLanguage || 'en-US',
+        prompt: state.voiceTranscript.slice(-400)
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload?.error || 'Could not transcribe audio.');
+    }
+    return String(payload?.transcript || '').trim();
+  } catch (err) {
+    console.error('TRANSCRIBE REQUEST ERROR:', err);
+    return '';
+  } finally {
+    state.voiceTranscriptionPending = false;
+  }
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(String(reader.result || ''));
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function handleLiveSpeechBlob(blob) {
+  if (!blob || blob.size < 1200) return;
+  const dataUrl = await blobToDataUrl(blob);
+  if (!dataUrl) return;
+
+  const transcript = await sendAudioDataUrlForTranscription(dataUrl, 'Listening live... transcribing your latest answer segment.');
+  if (!transcript) return;
+
+  const merged = mergeTranscriptChunk(state.voiceTranscript, transcript);
+  if (merged !== state.voiceTranscript) {
+    state.voiceTranscript = merged;
+    state.lastServerTranscript = transcript;
+    const answerBox = document.getElementById('answer-text-area');
+    if (answerBox) {
+      const composed = [state.answerTextBeforeRecording, state.voiceTranscript]
+        .filter(Boolean)
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      answerBox.value = composed;
+    }
+    updateSpeechPace();
+    analyzeSpeechSupport(state.voiceTranscript, state.voiceInterim);
+    refreshSpeechSupportUI();
+    if (!state.recording) {
+      finalizeSpeechCoaching();
+    }
+  }
+}
+
+async function startLiveSpeechApiStream() {
+  if (!window.MediaRecorder || !navigator.mediaDevices?.getUserMedia) return false;
+
+  try {
+    let sourceStream = null;
+    let ownsStream = false;
+
+    if (activeRecordingStream?.getAudioTracks?.().length) {
+      sourceStream = new MediaStream(activeRecordingStream.getAudioTracks().map(track => track.clone()));
+    } else {
+      sourceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      ownsStream = true;
+    }
+
+    const preferredType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus'
+      : MediaRecorder.isTypeSupported('audio/webm')
+        ? 'audio/webm'
+        : '';
+
+    const recorder = preferredType ? new MediaRecorder(sourceStream, { mimeType: preferredType }) : new MediaRecorder(sourceStream);
+    state.liveSpeechStream = sourceStream;
+    state.liveSpeechRecorder = recorder;
+    state.liveSpeechUsingApi = true;
+    state.liveSpeechChunkCount = 0;
+
+    recorder.ondataavailable = async (event) => {
+      if (!event.data || event.data.size === 0) return;
+      state.liveSpeechChunkCount += 1;
+      await handleLiveSpeechBlob(event.data);
+    };
+
+    recorder.onerror = (event) => {
+      console.error('LIVE SPEECH RECORDER ERROR:', event.error || event);
+    };
+
+    recorder.onstop = () => {
+      if (state.liveSpeechStream) {
+        state.liveSpeechStream.getTracks().forEach(track => track.stop());
+      }
+      state.liveSpeechStream = null;
+      state.liveSpeechRecorder = null;
+      state.liveSpeechUsingApi = false;
+    };
+
+    recorder.start(2500);
+    return true;
+  } catch (err) {
+    console.error('LIVE SPEECH API START ERROR:', err);
+    state.liveSpeechUsingApi = false;
+    if (state.liveSpeechStream) {
+      state.liveSpeechStream.getTracks().forEach(track => track.stop());
+    }
+    state.liveSpeechStream = null;
+    state.liveSpeechRecorder = null;
+    return false;
+  }
+}
+
+async function toggleRecord() {
+  if (state.recording) {
+    stopVoiceCapture();
+    return;
+  }
+
+  const helper = document.getElementById('voice-helper');
+  const note = document.getElementById('speech-coach-note');
+
+  state.recording = true;
+  state.voiceShouldContinue = true;
+  state.voiceStopRequested = false;
+  clearTimeout(state.voiceRestartTimer);
+  state.voiceStartedAt = Date.now();
+  state.answerTextBeforeRecording = document.getElementById('answer-text-area')?.value.trim() || '';
+  state.voiceInterim = '';
+  if (!state.voiceTranscript.trim()) {
+    state.voiceTranscript = '';
+  }
+
+  const btn = document.getElementById('record-btn');
+  const label = document.getElementById('record-label');
+  if (btn) btn.classList.add('recording');
+  if (label) label.textContent = 'Stop Recording';
+  if (helper) helper.textContent = `Listening in ${getSpeechLanguageLabel(state.spokenLanguage)}... your words will appear live below.`;
+  if (note) note.textContent = 'Live coach is active. Keep your answer structured while you speak.';
+  animateVoiceWave(true);
+  refreshSpeechSupportUI();
+
+  const liveApiStarted = await startLiveSpeechApiStream();
+  if (liveApiStarted && helper) {
+    helper.textContent = `Listening in ${getSpeechLanguageLabel(state.spokenLanguage)}... live transcription is on.`;
+  }
+
+  const recognition = ensureSpeechRecognition();
+  if (!recognition) {
+    if (helper) {
+      helper.textContent = liveApiStarted
+        ? 'Live transcription is running through the backend.'
+        : 'Live browser speech is unavailable here. We will transcribe your answer when you stop recording.';
+    }
+    return;
+  }
+
+  try {
+    recognition.lang = state.spokenLanguage || 'en-US';
+    recognition.start();
+  } catch (err) {
+    console.error('VOICE START ERROR:', err);
+    if (helper) {
+      helper.textContent = liveApiStarted
+        ? 'Live backend transcription is running. Browser speech recognition could not start.'
+        : 'Could not start live speech recognition. We will still try to transcribe when you stop recording.';
+    }
+  }
+}
+
+function stopLiveSpeechApiStream() {
+  if (state.liveSpeechRecorder && state.liveSpeechRecorder.state !== 'inactive') {
+    try {
+      state.liveSpeechRecorder.stop();
+    } catch (err) {
+      console.error('LIVE SPEECH API STOP ERROR:', err);
+    }
+  } else if (state.liveSpeechStream) {
+    state.liveSpeechStream.getTracks().forEach(track => track.stop());
+    state.liveSpeechStream = null;
+    state.liveSpeechRecorder = null;
+    state.liveSpeechUsingApi = false;
+  }
+}
+
+function flushInterimTranscript() {
+  if (!state.voiceInterim) return;
+  appendTranscriptToAnswer(state.voiceInterim);
+  state.voiceInterim = '';
+}
+
+function finalizeSpeechCoaching() {
+  const spokenText = [state.voiceTranscript, state.voiceInterim].filter(Boolean).join(' ').trim();
+  const helper = document.getElementById('voice-helper');
+
+  analyzeSpeechSupport(state.voiceTranscript, state.voiceInterim);
+  if (!spokenText) {
+    if (helper) helper.textContent = 'No speech was captured yet. Try again and speak a bit closer to the microphone.';
+    return;
+  }
+
+  if (helper) {
+    helper.textContent = `Coach review ready: ${state.speechInsights.review || 'Read the debrief below and refine your answer before submitting.'}`;
+  }
+  refreshSpeechSupportUI();
+}
+
+function stopVoiceCapture() {
+  flushInterimTranscript();
+  state.recording = false;
+  state.voiceShouldContinue = false;
+  state.voiceStopRequested = true;
+  clearTimeout(state.voiceRestartTimer);
+  stopLiveSpeechApiStream();
+  const btn = document.getElementById('record-btn');
+  const label = document.getElementById('record-label');
+  const helper = document.getElementById('voice-helper');
+  btn.classList.remove('recording');
+  label.textContent = 'Record Voice';
+  if (helper) helper.textContent = state.voiceTranscript
+    ? 'Voice captured. You can edit the transcript or submit your answer.'
+    : 'No speech was captured. Check microphone permission and try again.';
+  animateVoiceWave(false);
+  refreshSpeechSupportUI();
+  if (state.recognition) {
+    try {
+      state.recognition.stop();
+    } catch (err) {
+      console.error('VOICE STOP ERROR:', err);
+    }
+  }
+  state.answerTextBeforeRecording = '';
+  if (state.voiceTranscript.trim()) {
+    finalizeSpeechCoaching();
+  } else if (state.interviewActive) {
+    setTimeout(() => {
+      if (!state.voiceTranscript.trim()) {
+        tryServerVoiceTranscription();
+      }
+    }, 150);
+  }
+}
+
+function ensureSpeechRecognition() {
+  if (state.recognition) return state.recognition;
+  if (!isSpeechRecognitionContextSupported()) return null;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return null;
+
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = state.spokenLanguage || 'en-US';
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event) => {
+    let interimTranscript = '';
+    let finalizedTranscript = '';
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript.trim();
+      if (!transcript) continue;
+      if (event.results[i].isFinal) {
+        finalizedTranscript += ` ${transcript}`;
+      } else {
+        interimTranscript += ` ${transcript}`;
+      }
+    }
+
+    if (finalizedTranscript.trim()) {
+      appendTranscriptToAnswer(finalizedTranscript.trim());
+      updateSpeechPace();
+    }
+
+    state.voiceInterim = interimTranscript.trim();
+    const answerBox = document.getElementById('answer-text-area');
+    if (answerBox) {
+      const composed = [state.answerTextBeforeRecording, state.voiceTranscript, state.voiceInterim]
+        .filter(Boolean)
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      answerBox.value = composed;
+    }
+    analyzeSpeechSupport(state.voiceTranscript, state.voiceInterim);
+    refreshSpeechSupportUI();
+    const helper = document.getElementById('voice-helper');
+    if (helper && state.recording) {
+      helper.textContent = state.voiceInterim
+        ? `Listening... ${state.voiceInterim}`
+        : 'Listening now... your spoken answer is being added to the answer box.';
+    }
+  };
+
+  recognition.onerror = (event) => {
+    console.error('VOICE RECOGNITION ERROR:', event.error);
+    const helper = document.getElementById('voice-helper');
+    if (event.error === 'not-allowed' || event.error === 'service-not-allowed' || event.error === 'audio-capture') {
+      stopVoiceCapture();
+      if (helper) helper.textContent = 'Microphone permission or audio capture is unavailable. You can still type your answer.';
+      return;
+    }
+    if (event.error === 'aborted') {
+      return;
+    }
+    if (event.error === 'no-speech') {
+      if (helper && state.recording) helper.textContent = 'No speech detected yet. Please speak a little louder and closer to the mic.';
+      return;
+    }
+    if (helper && state.recording) {
+      helper.textContent = 'Voice paused for a moment. Trying to continue...';
+    }
+  };
+
+  recognition.onend = () => {
+    if (state.voiceShouldContinue && !state.voiceStopRequested && state.interviewActive) {
+      state.voiceRestartTimer = setTimeout(() => {
+        try {
+          recognition.lang = state.spokenLanguage || 'en-US';
+          recognition.start();
+        } catch (err) {
+          console.error('VOICE RESTART ERROR:', err);
+          const helper = document.getElementById('voice-helper');
+          if (helper) helper.textContent = 'Voice recognition could not restart. Try Record Voice again.';
+          stopVoiceCapture();
+        }
+      }, 250);
+      return;
+    }
+  };
+
+  state.recognition = recognition;
+  return recognition;
+}
+
+function appendTranscriptToAnswer(transcript) {
+  const cleaned = String(transcript || '').replace(/\s+/g, ' ').trim();
+  if (!cleaned) return;
+  state.voiceTranscript = `${state.voiceTranscript} ${cleaned}`.trim();
+  updateSpeechPace();
+  const answerBox = document.getElementById('answer-text-area');
+  if (answerBox) {
+    const composed = [state.answerTextBeforeRecording, state.voiceTranscript]
+      .filter(Boolean)
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    answerBox.value = composed;
+  }
+  analyzeSpeechSupport(state.voiceTranscript, '');
+  refreshSpeechSupportUI();
+}
+
+async function tryServerVoiceTranscription() {
+  if (!state.sessionId || state.voiceTranscriptionPending) return '';
+  if (state.voiceTranscript.trim()) return state.voiceTranscript.trim();
+  if (!mediaRecorder || mediaRecorder.state === 'inactive') return '';
+
+  const helper = document.getElementById('voice-helper');
+  if (helper) helper.textContent = 'Processing your recorded voice...';
+
+  try {
+    const snapshot = await stopRecording();
+    const dataUrl = snapshot?.dataUrl || state.latestRecordingDataUrl || '';
+    if (!dataUrl) return '';
+
+    state.latestRecordingDataUrl = dataUrl;
+    const transcript = await sendAudioDataUrlForTranscription(dataUrl, 'Processing your recorded voice...');
+    if (transcript && transcript !== state.lastServerTranscript) {
+      state.lastServerTranscript = transcript;
+      appendTranscriptToAnswer(transcript);
+      finalizeSpeechCoaching();
+    }
+    if (helper) helper.textContent = transcript
+      ? 'Voice captured and converted to text.'
+      : 'Audio was captured, but transcript was empty. Please speak a bit louder and retry.';
+    return transcript;
+  } catch (err) {
+    console.error('SERVER TRANSCRIBE ERROR:', err);
+    if (helper) helper.textContent = 'Voice could not be transcribed. You can still type your answer.';
+    return '';
+  } finally {
+    if (state.interviewActive) {
+      try {
+        await startRecording();
+      } catch (restartErr) {
+        console.error('RECORDING RESTART ERROR:', restartErr);
+      }
+    }
+  }
+}
+
+function updateSpeechPace() {
+  if (!state.voiceStartedAt || !state.voiceTranscript) return;
+  const elapsedMinutes = Math.max((Date.now() - state.voiceStartedAt) / 60000, 1 / 60);
+  const words = state.voiceTranscript.split(/\s+/).filter(Boolean).length;
+  wpmCount = Math.round(words / elapsedMinutes);
+  document.getElementById('wpm-display').textContent = wpmCount;
+}
+
+function animateVoiceWave(active) {
+  document.querySelectorAll('.vbar').forEach(b => {
+    b.style.animation = active ? `voiceAnim ${0.3 + Math.random() * 0.5}s ease-in-out infinite alternate` : 'none';
+  });
+}
+
+function setupEmotionPanel() {
+  const meters = document.getElementById('emotion-meters');
+  meters.innerHTML = EMOTION_METRICS.map(e =>
+    `<div class="emotion-row">
+      <div class="emotion-row-top">
+        <span class="emotion-name">${e.name}</span>
+        <span class="emotion-pct" style="color:${e.color}" id="em-pct-${metricKey(e.name)}">${e.val}%</span>
+      </div>
+      <div class="emotion-bar-bg">
+        <div class="emotion-bar-fill" id="em-bar-${metricKey(e.name)}" style="width:${e.val}%;background:${e.color}"></div>
+      </div>
+    </div>`
+  ).join('');
+
+  setEmotionStatus('Loading model...', 'var(--amber)');
+  const presenceEl = document.getElementById('confidence-score');
+  if (presenceEl) {
+    presenceEl.textContent = '';
+    presenceEl.style.color = 'var(--text)';
+  }
+}
+
+function metricKey(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
+function clampMetric(value) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function setEmotionStatus(text, color = 'var(--blue)') {
+  const label = document.getElementById('emotion-label');
+  const dot = document.getElementById('emotion-dot');
+  if (label) label.textContent = text;
+  if (dot) dot.style.background = color;
+}
+
+function updateMetricDisplay(name, value) {
+  const safeValue = clampMetric(value);
+  const key = metricKey(name);
+  const pct = document.getElementById(`em-pct-${key}`);
+  const bar = document.getElementById(`em-bar-${key}`);
+  if (pct) pct.textContent = `${safeValue}%`;
+  if (bar) bar.style.width = `${safeValue}%`;
+}
+
+async function ensureEmotionModel() {
+  if (state.emotionModelReady) return true;
+  if (state.emotionModelPromise) return state.emotionModelPromise;
+
+  state.emotionModelPromise = (async () => {
+    if (!window.faceapi) throw new Error('face-api.js not loaded');
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(FACE_API_MODEL_URL),
+      faceapi.nets.faceExpressionNet.loadFromUri(FACE_API_MODEL_URL),
+    ]);
+    state.emotionModelReady = true;
+    return true;
+  })().catch((err) => {
+    console.error('EMOTION MODEL LOAD ERROR:', err);
+    state.emotionModelReady = false;
+    setEmotionStatus('Expression AI unavailable', 'var(--red)');
+    const camStatus = document.getElementById('cam-status');
+    if (camStatus) {
+      camStatus.textContent = 'Could not load the expression model. Check internet access for CDN model files.';
+      camStatus.style.color = 'var(--amber)';
+    }
+    return false;
+  }).finally(() => {
+    state.emotionModelPromise = null;
+  });
+
+  return state.emotionModelPromise;
+}
+
+function updatePresenceScore(value, caption) {
+  const presence = clampMetric(value);
+  const scoreEl = document.getElementById('confidence-score');
+  const captionEl = document.getElementById('presence-caption');
+  if (scoreEl) {
+    scoreEl.textContent = presence;
+    scoreEl.style.color = presence >= 70 ? 'var(--green)' : presence >= 45 ? 'var(--amber)' : 'var(--red)';
+  }
+  if (captionEl) captionEl.textContent = caption;
+}
+
+function applyLiveEmotionMetrics(metrics, presenceScore) {
+  state.liveEmotionMetrics = { ...metrics, presence: clampMetric(presenceScore) };
+  updateMetricDisplay('Confidence', metrics.confidence);
+  updateMetricDisplay('Stress', metrics.stress);
+  updateMetricDisplay('Engagement', metrics.engagement);
+  updateMetricDisplay('Calmness', metrics.calmness);
+  updatePresenceScore(presenceScore, 'Live webcam analysis');
+  setEmotionStatus('Emotion AI live', 'var(--green)');
+}
+
+function handleNoFaceDetected() {
+  state.liveEmotionMetrics = { ...state.liveEmotionMetrics, presence: 0 };
+  updatePresenceScore(0, 'Face not detected');
+  setEmotionStatus('No face detected', 'var(--amber)');
+}
+
+function deriveEmotionMetrics(detection, video) {
+  const expressions = detection.expressions || {};
+  const box = detection.detection.box;
+  const width = video.videoWidth || 1;
+  const height = video.videoHeight || 1;
+  const areaRatio = (box.width * box.height) / (width * height);
+  const faceCenterX = (box.x + box.width / 2) / width;
+  const faceCenterY = (box.y + box.height / 2) / height;
+  const centerOffset = Math.abs(faceCenterX - 0.5) + Math.abs(faceCenterY - 0.5);
+  const centeringScore = clampMetric(100 - centerOffset * 180);
+  const sizeScore = clampMetric(Math.min(areaRatio / 0.2, 1) * 100);
+  const detectorScore = clampMetric((detection.detection.score || 0.5) * 100);
+  const presenceScore = clampMetric(detectorScore * 0.4 + centeringScore * 0.35 + sizeScore * 0.25);
+
+  const neutral = expressions.neutral || 0;
+  const happy = expressions.happy || 0;
+  const sad = expressions.sad || 0;
+  const angry = expressions.angry || 0;
+  const fearful = expressions.fearful || 0;
+  const surprised = expressions.surprised || 0;
+  const disgusted = expressions.disgusted || 0;
+
+  const confidence = clampMetric(35 + neutral * 30 + happy * 35 + surprised * 8 - fearful * 18 - sad * 12 - angry * 10);
+  const stress = clampMetric(8 + fearful * 55 + angry * 42 + sad * 18 + surprised * 10 + disgusted * 14 - happy * 12);
+  const engagement = clampMetric(20 + presenceScore * 0.45 + happy * 16 + surprised * 12 + neutral * 12);
+  const calmness = clampMetric(18 + neutral * 55 + happy * 12 - fearful * 40 - angry * 32 - surprised * 12);
+
+  return {
+    presenceScore,
+    metrics: { confidence, stress, engagement, calmness }
+  };
+}
+
+async function analyzeEmotions() {
+  if (!state.emotionModelReady || state.emotionBusy) return;
+  const video = document.getElementById('webcam-video');
+  if (!video || video.readyState < 2 || video.paused || video.ended) return;
+
+  state.emotionBusy = true;
+  try {
+    const detection = await faceapi
+      .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 }))
+      .withFaceExpressions();
+
+    if (!detection) {
+      handleNoFaceDetected();
+      return;
+    }
+
+    const { presenceScore, metrics } = deriveEmotionMetrics(detection, video);
+    applyLiveEmotionMetrics(metrics, presenceScore);
+  } catch (err) {
+    console.error('EMOTION ANALYSIS ERROR:', err);
+    setEmotionStatus('Expression analysis paused', 'var(--amber)');
+  } finally {
+    state.emotionBusy = false;
+  }
+}
+
+async function startEmotionTracking() {
+  clearInterval(state.emotionInterval);
+  const modelReady = await ensureEmotionModel();
+  if (!modelReady) return;
+
+  await analyzeEmotions();
+  state.emotionInterval = setInterval(() => {
+    analyzeEmotions();
+  }, 1200);
+}
+
+async function requestCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    activeCameraStream = stream;
+    const video = document.getElementById('webcam-video');
+    video.srcObject = stream;
+    await new Promise((resolve) => {
+      if (video.readyState >= 2) {
+        resolve();
+        return;
+      }
+      video.onloadedmetadata = () => resolve();
+    });
+    document.getElementById('cam-status').textContent = 'Camera active. Starting expression analysis...';
+    document.getElementById('cam-status').style.color = 'var(--green)';
+    startEmotionTracking().catch(err => console.error('EMOTION TRACKING ERROR:', err));
+  } catch (e) {
+    document.getElementById('cam-status').textContent = 'Camera unavailable';
+    document.getElementById('webcam-video').style.display = 'none';
+    setEmotionStatus('Camera unavailable', 'var(--red)');
+  }
+}
+
+function changeLang() {
+  setCodeEditorTemplate(state.currentQuestionText, true);
+}
+
+function runCode() {
+  const code = document.getElementById('code-editor').value;
+  const lang = document.getElementById('lang-select').value;
+  const output = document.getElementById('code-output');
+  output.innerHTML = '<div class="output-line info"> Running...</div>';
+  setTimeout(() => {
+    let results = [];
+    try {
+      if (lang === 'javascript') {
+        const logs = [];
+        const fn = new Function('console', code);
+        fn({ log: (...a) => logs.push(a.join(' ')), error: (...a) => logs.push('ERROR: ' + a.join(' ')) });
+        results = logs.length ? logs.map(l => ({ t: 'ok', v: l })) : [{ t: 'info', v: 'S Code executed (no output)' }];
+      } else {
+        results = [
+          { t: 'info', v: `[${lang}] Simulation mode  JS only executes live` },
+          { t: 'ok', v: '[0, 1]' },
+          { t: 'ok', v: 'S Test passed: twoSum([2,7,11,15], 9) = [0,1]' },
+          { t: 'ok', v: 'S Time complexity: O(n) | Space: O(n)' },
+        ];
+      }
+    } catch (e) {
+      results = [{ t: 'err', v: 'Error: ' + e.message }];
+    }
+    output.innerHTML = results.map(r => `<div class="output-line ${r.t}">${r.v}</div>`).join('');
+  }, 600);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.id === 'code-editor' && e.key === 'Tab') {
+    e.preventDefault();
+    const s = e.target.selectionStart;
+    e.target.value = e.target.value.substring(0, s) + '  ' + e.target.value.substring(e.target.selectionEnd);
+    e.target.selectionStart = e.target.selectionEnd = s + 2;
+  }
+});
+
+const FEEDBACK_COMMENTS = [
+  "Strong answer using the STAR method. Clearly articulated the technical challenge and your approach.",
+  "Good effort, but the answer lacked depth. Consider adding specific metrics or outcomes.",
+  "Answer was too brief. The interviewer was looking for more technical detail and personal ownership.",
+  "Excellent response! You connected your experience directly to the role requirements.",
+  "Decent answer but the pacing was uneven. Slow down when explaining complex topics.",
+  "Very good. You demonstrated both technical knowledge and communication skills effectively.",
+  "Needs improvement. The answer was vague  practice giving concrete examples with numbers.",
+  "Outstanding. Your problem-solving approach was methodical and very impressive.",
+];
+
+function buildLocalReadinessPrediction(overall, breakdown = {}) {
+  const communication = Number(breakdown.communication || overall || 0);
+  const content = Number(breakdown.content || overall || 0);
+  const coding = Number(breakdown.coding || overall || 0);
+  const confidence = Number(breakdown.confidence || overall || 0);
+  const probability = clampMetric(Math.round((overall * 0.42) + (content * 0.22) + (communication * 0.18) + (coding * 0.12) + (confidence * 0.06)));
+  return {
+    label: probability >= 82 ? 'Interview-ready' : probability >= 66 ? 'Near-ready' : probability >= 50 ? 'Needs targeted practice' : 'Foundation building',
+    probability,
+    skillSignals: [
+      content >= communication ? 'Technical depth' : 'Communication clarity',
+      coding >= 75 ? 'Coding readiness' : 'Problem-solving baseline'
+    ],
+    riskFactors: [
+      communication < 70 ? 'Communication structure' : '',
+      confidence < 70 ? 'Confidence under pressure' : '',
+      content < 70 ? 'Answer depth' : ''
+    ].filter(Boolean).concat(['Consistency across questions']).slice(0, 3)
+  };
+}
+
+function buildFeedback() {
+  const report = state.latestReport;
+  const fallbackScores = [72, 88, 65, 91, 78, 84, 60, 87];
+  const qs = state.questions.length ? state.questions : QUESTIONS['Mixed'].slice(0, 8);
+  const overall = report?.overallScore
+    ?? Math.round(fallbackScores.slice(0, qs.length).reduce((a, b) => a + b, 0) / qs.length);
+  state.latestOverallScore = overall;
+
+  document.getElementById('overall-score').textContent = overall;
+  const arc = document.getElementById('score-arc');
+  setTimeout(() => { if (arc) arc.style.strokeDashoffset = 408 - (overall / 100) * 408; }, 300);
+
+  const summary = buildSessionSummary();
+  const summaryRole = document.getElementById('summary-role');
+  const summaryStatus = document.getElementById('summary-status');
+  const summaryAnswered = document.getElementById('summary-answered');
+  const summaryDuration = document.getElementById('summary-duration');
+  const summaryVerdict = document.getElementById('summary-verdict');
+  if (summaryRole) summaryRole.textContent = state.company ? `${state.role} at ${state.company}` : state.role || 'Mock interview';
+  if (summaryStatus) summaryStatus.textContent = summary.status;
+  if (summaryAnswered) summaryAnswered.textContent = `${summary.answeredCount} / ${summary.questionCount}`;
+  if (summaryDuration) summaryDuration.textContent = getInterviewDurationLabel();
+  if (summaryVerdict) summaryVerdict.textContent = report?.hiringVerdict || (overall >= 75 ? 'Promising candidate' : 'Needs practice');
+
+  const breakdown = report?.breakdown || {
+    content: Math.round(overall * 1.02),
+    communication: Math.round(overall * 0.94),
+    confidence: Math.round(overall * 0.97),
+    coding: Math.round(overall * 1.06),
+  };
+
+  document.getElementById('sc-content').textContent = breakdown.content;
+  document.getElementById('sc-comm').textContent = breakdown.communication;
+  document.getElementById('sc-conf').textContent = breakdown.confidence;
+  document.getElementById('sc-code').textContent = breakdown.coding;
+
+  const reviews = report?.questionReviews || qs.map((q, i) => ({
+    questionNumber: i + 1,
+    question: q.q,
+    score: fallbackScores[i % fallbackScores.length],
+    feedback: FEEDBACK_COMMENTS[i % FEEDBACK_COMMENTS.length],
+  }));
+
+  document.getElementById('q-review-list').innerHTML = reviews.map((review, i) => {
+    const score = review.score;
+    const cat = score >= 80 ? 'good' : score >= 65 ? 'average' : 'poor';
+    return `<div class="q-review-item ${cat}">
+      <div class="qr-top">
+        <div class="qr-q">Q${review.questionNumber || i + 1}: ${(review.question || '').substring(0, 80)}${(review.question || '').length > 80 ? '&' : ''}</div>
+        <div class="qr-score-pill">${score}/100</div>
+      </div>
+      <div class="qr-feedback">${review.feedback || FEEDBACK_COMMENTS[i % FEEDBACK_COMMENTS.length]}</div>
+    </div>`;
+  }).join('');
+
+  const improveGrid = document.getElementById('improve-grid');
+  if (improveGrid) {
+    const improvementItems = (report?.topImprovements || [
+      'Use STAR method more consistently in behavioral answers',
+      'Keep technical explanations sharper and more structured',
+      'Support claims with clearer examples and measurable results',
+      'Slow down slightly during complex explanations'
+    ]).slice(0, 4);
+
+    const icons = ['1', '2', '3', '4'];
+    improveGrid.innerHTML = improvementItems.map((item, index) => `
+      <div class="improve-item">
+        <div class="improve-icon">${icons[index % icons.length]}</div>
+        <div class="improve-text"><strong>Focus Area ${index + 1}</strong>${item}</div>
+      </div>
+    `).join('');
+  }
+
+  const aiSummaryGrid = document.getElementById('ai-summary-grid');
+  if (aiSummaryGrid) {
+    const predictive = report?.predictiveReadiness || buildLocalReadinessPrediction(overall, breakdown);
+    const weakSignal = (predictive.riskFactors || ['Needs stronger evidence in answers'])[0] || 'Needs stronger evidence in answers';
+    const strongSignal = (predictive.skillSignals || ['Role fundamentals detected'])[0] || 'Role fundamentals detected';
+    aiSummaryGrid.innerHTML = `
+      <div class="ai-summary-card">
+        <span>Readiness Class</span>
+        <strong>${predictive.label}</strong>
+        <p>${predictive.probability}% match confidence</p>
+      </div>
+      <div class="ai-summary-card">
+        <span>Strongest Signal</span>
+        <strong>${strongSignal}</strong>
+        <p>Transformer-style scoring from answers, delivery, and coding signals.</p>
+      </div>
+      <div class="ai-summary-card">
+        <span>Risk Signal</span>
+        <strong>${weakSignal}</strong>
+        <p>Use this as the next practice target.</p>
+      </div>
+    `;
+  }
+
+  const aiNextSteps = document.getElementById('ai-next-steps');
+  if (aiNextSteps) {
+    const nextSteps = (report?.nextSteps || [
+      'Practice one concise introduction for your target role.',
+      'Add a metric or result to each answer.',
+      'Slow down during technical explanations to sound more confident.'
+    ]).slice(0, 3);
+    aiNextSteps.innerHTML = nextSteps.map((step, index) => `
+      <div class="ai-step-item">
+        <div class="ai-step-count">${index + 1}</div>
+        <div class="ai-step-text">${step}</div>
+      </div>
+    `).join('');
+  }
+
+  const emailDeliveryStatus = document.getElementById('email-delivery-status');
+  if (emailDeliveryStatus) {
+    const emailDelivery = report?.emailDelivery;
+    emailDeliveryStatus.textContent = emailDelivery?.sent
+      ? `AI report delivered to ${emailDelivery.recipientEmail || state.currentUser?.email || 'your email'} via ${emailDelivery.via || 'automation'}.`
+      : `Email automation status: ${emailDelivery?.reason || 'not configured yet'}${emailDelivery?.detail ? ` - ${emailDelivery.detail}` : ''}.`;
+  }
+
+  const playback = document.getElementById('playback');
+  if (playback) {
+    const playbackSource = state.latestRecordingUrl || state.latestRecordingDataUrl;
+    if (playbackSource) {
+      playback.src = normalizeMediaUrl(playbackSource);
+      playback.style.display = 'block';
+    } else {
+      playback.removeAttribute('src');
+      playback.style.display = 'none';
+    }
+  }
+
+  const feedbackEmotionSummary = document.getElementById('feedback-emotion-summary');
+  if (feedbackEmotionSummary) {
+    const feedbackMetrics = [
+      { label: 'Confidence', value: state.liveEmotionMetrics.confidence, color: 'var(--green)' },
+      { label: 'Stress', value: state.liveEmotionMetrics.stress, color: 'var(--amber)' },
+      { label: 'Engagement', value: state.liveEmotionMetrics.engagement, color: 'var(--blue)' },
+      { label: 'Calmness', value: state.liveEmotionMetrics.calmness, color: 'var(--pink)' },
+      { label: 'Presence', value: state.liveEmotionMetrics.presence, color: 'var(--accent2)' },
+    ];
+
+    feedbackEmotionSummary.innerHTML = feedbackMetrics.map(metric => `
+      <div class="es-row">
+        <div class="es-label">${metric.label}</div>
+        <div class="es-bar-bg"><div class="es-bar" style="width:${clampMetric(metric.value)}%;background:${metric.color}"></div></div>
+        <div class="es-pct" style="color:${metric.color}">${clampMetric(metric.value)}%</div>
+      </div>
+    `).join('');
+  }
+}
+
+async function createFeedbackPdfBlob() {
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) {
+    throw new Error('PDF engine is unavailable. Refresh the page and try again.');
+  }
+
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const report = state.latestReport || {};
+  const summary = buildSessionSummary();
+  const title = `${state.role || 'Interview'} Report`;
+  const transcript = (report.transcript || '').slice(0, 5000);
+  const nextSteps = (report.nextSteps || []).slice(0, 5);
+  const strengths = (report.topStrengths || []).slice(0, 5);
+  const improvements = (report.topImprovements || []).slice(0, 5);
+  const sentiment = report.sentimentAnalysis || { label: 'Balanced', score: state.latestOverallScore || 0, evidence: '' };
+
+  let y = 48;
+  const addSection = (heading, bodyLines = []) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text(heading, 40, y);
+    y += 18;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    bodyLines.forEach((line) => {
+      const wrapped = doc.splitTextToSize(String(line || ''), 510);
+      doc.text(wrapped, 40, y);
+      y += wrapped.length * 14 + 6;
+      if (y > 760) {
+        doc.addPage();
+        y = 48;
+      }
+    });
+    y += 8;
+  };
+
+  doc.setFillColor(20, 28, 40);
+  doc.rect(0, 0, 595, 110, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(24);
+  doc.text('InterviewIQ AI Scorecard', 40, 50);
+  doc.setFontSize(12);
+  doc.text(title, 40, 74);
+  doc.text(`Overall Score: ${state.latestOverallScore || report.overallScore || 0}/100`, 40, 92);
+  doc.setTextColor(35, 40, 47);
+  y = 140;
+
+  addSection('Session Summary', [
+    `Role: ${state.company ? `${state.role} at ${state.company}` : state.role || 'Interview'}`,
+    `Status: ${summary.status}`,
+    `Answered: ${summary.answeredCount}/${summary.questionCount}`,
+    `Duration: ${getInterviewDurationLabel()}`,
+    `Verdict: ${report.hiringVerdict || 'Practice ready'}`,
+  ]);
+
+  const predictive = report.predictiveReadiness || buildLocalReadinessPrediction(state.latestOverallScore || report.overallScore || 0, report.breakdown || {});
+  addSection('ML/DL Readiness Prediction', [
+    `Readiness: ${predictive.label} (${predictive.probability}% match confidence)`,
+    `Strong signals: ${(predictive.skillSignals || []).join(', ') || 'Role fundamentals detected'}`,
+    `Risk signals: ${(predictive.riskFactors || []).join(', ') || 'Consistency across questions'}`,
+  ]);
+
+  addSection('Top Strengths', strengths.length ? strengths.map((item, index) => `${index + 1}. ${item}`) : ['Strength summary unavailable.']);
+  addSection('Top Improvements', improvements.length ? improvements.map((item, index) => `${index + 1}. ${item}`) : ['Improvement summary unavailable.']);
+  addSection('AI Next Steps', nextSteps.length ? nextSteps.map((item, index) => `${index + 1}. ${item}`) : ['No next steps available.']);
+
+  if (transcript) {
+    addSection('Interview Transcript Snapshot', [transcript]);
+  }
+
+  const blob = doc.output('blob');
+  return blob;
+}
+
+async function downloadFeedbackPdf() {
+  try {
+    const blob = await createFeedbackPdfBlob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `InterviewIQ-${(state.role || 'report').replace(/\s+/g, '-')}-Report.pdf`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  } catch (err) {
+    console.error('PDF DOWNLOAD ERROR:', err);
+    setAIStatus('Could not generate PDF report.');
+  }
+}
+
+async function shareFeedbackPdf() {
+  try {
+    const blob = await createFeedbackPdfBlob();
+    const file = new File([blob], `InterviewIQ-${(state.role || 'report').replace(/\s+/g, '-')}-Report.pdf`, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: 'InterviewIQ AI Report',
+        text: 'Sharing my AI interview scorecard and report.',
+        files: [file],
+      });
+      return;
+    }
+    await downloadFeedbackPdf();
+  } catch (err) {
+    console.error('PDF SHARE ERROR:', err);
+    setAIStatus('Could not share PDF report.');
+  }
+}
+
+let recSecs = 0, recTotal = 1472;
+function togglePlay() {
+  state.isPlaying = !state.isPlaying;
+  document.getElementById('play-btn').textContent = state.isPlaying ? '' : '';
+  if (state.isPlaying) {
+    state.playInterval = setInterval(() => {
+      recSecs = Math.min(recSecs + 1, recTotal);
+      const pct = (recSecs / recTotal) * 100;
+      document.getElementById('tl-progress').style.width = pct + '%';
+      const m = Math.floor(recSecs / 60), s = recSecs % 60;
+      const tm = Math.floor(recTotal / 60), ts = recTotal % 60;
+      document.getElementById('rec-time').textContent = `${m}:${String(s).padStart(2,'0')} / ${tm}:${String(ts).padStart(2,'0')}`;
+      if (recSecs >= recTotal) { clearInterval(state.playInterval); state.isPlaying = false; document.getElementById('play-btn').textContent = ''; }
+    }, 100);
+  } else {
+    clearInterval(state.playInterval);
+  }
+}
+
+function seekTimeline(e) {
+  const bar = document.getElementById('tl-bar');
+  const rect = bar.getBoundingClientRect();
+  recSecs = Math.round(Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) * recTotal);
+  document.getElementById('tl-progress').style.width = (recSecs / recTotal * 100) + '%';
+}
+
+const styleEl = document.createElement('style');
+styleEl.textContent = `@keyframes voiceAnim { from { height: 4px; } to { height: 48px; } }`;
+document.head.appendChild(styleEl);
+
+let mediaRecorder;
+let recordedChunks = [];
+let activeRecordingStream = null;
+let activeCameraStream = null;
+
+async function startRecording() {
+  recordedChunks = [];
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    const helper = document.getElementById('voice-helper');
+    if (helper) helper.textContent = 'Browser media recording is unavailable, but typed answers still work.';
+    return null;
+  }
+
+  let stream = null;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  } catch (videoAudioError) {
+    console.error('VIDEO RECORDING START ERROR:', videoAudioError);
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (audioError) {
+      console.error('AUDIO RECORDING START ERROR:', audioError);
+      const helper = document.getElementById('voice-helper');
+      if (helper) helper.textContent = 'Recording permission was blocked. You can still type or use browser speech if microphone permission is allowed.';
+      return null;
+    }
+  }
+
+  activeRecordingStream = stream;
+  const video = document.getElementById("webcam-video");
+  if (stream.getVideoTracks().length && video) {
+    if (activeCameraStream && activeCameraStream !== stream) {
+      activeCameraStream.getTracks().forEach(track => track.stop());
+    }
+    activeCameraStream = stream;
+    video.srcObject = stream;
+    video.style.display = 'block';
+  }
+
+  const preferredType = MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')
+    ? 'video/webm;codecs=vp8,opus'
+    : MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus'
+      : '';
+  mediaRecorder = preferredType ? new MediaRecorder(stream, { mimeType: preferredType }) : new MediaRecorder(stream);
+
+  mediaRecorder.ondataavailable = e => {
+    if (e.data.size > 0) recordedChunks.push(e.data);
+  };
+
+  mediaRecorder.start(1000);
+  return mediaRecorder;
+}
+function stopRecording() {
+  return new Promise((resolve) => {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+      resolve(null);
+      return;
+    }
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || "video/webm" });
+      const objectUrl = URL.createObjectURL(blob);
+      state.latestRecordingUrl = objectUrl;
+      const playback = document.getElementById("playback");
+      if (playback) playback.src = objectUrl;
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result;
+        state.latestRecordingDataUrl = dataUrl;
+        if (activeRecordingStream) {
+          activeRecordingStream.getTracks().forEach(track => track.stop());
+          activeRecordingStream = null;
+        }
+        resolve({ objectUrl, dataUrl });
+      };
+      reader.readAsDataURL(blob);
+    };
+
+    mediaRecorder.stop();
+  });
+}
+
+switchAuthMode('login');
+refreshSpeechSupportUI();
+primeSpeechVoices();
+if ('onvoiceschanged' in speechSynthesis) {
+  speechSynthesis.onvoiceschanged = () => primeSpeechVoices();
+}
+loadCurrentUser();
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
