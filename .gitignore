@@ -5,3 +5,7 @@ dist
 build
 coverage
 *.log
+
+# Local Netlify folder
+.netlify
+netlify-static
